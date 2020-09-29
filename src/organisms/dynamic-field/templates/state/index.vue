@@ -1,0 +1,63 @@
+<script lang="ts">
+import { get } from 'lodash';
+import PStatus from '@/molecules/status/PStatus.vue';
+import { getColor } from '@/organisms/dynamic-field/PDynamicField.toolset';
+import { StatusProps } from '@/molecules/status/type';
+import { StateOptions, TextOptions } from '@/organisms/dynamic-field/type/field-schema';
+import { StateDynamicFieldProps } from '@/organisms/dynamic-field/templates/state/type';
+import PAnchor from '@/molecules/anchors/PAnchor.vue';
+
+export default {
+    name: 'PDynamicFieldState',
+    functional: true,
+    components: { PStatus, PAnchor },
+    props: {
+        // eslint-disable-next-line camelcase,vue/prop-name-casing
+        options: {
+            type: Object,
+            default: () => ({}),
+        },
+        data: {
+            type: [String, Object, Array, Boolean, Number],
+            default: undefined,
+        },
+        typeOptions: {
+            type: Object,
+            default: () => ({}),
+        },
+        extraData: {
+            type: Object,
+            default: () => ({}),
+        },
+        beforeCreate: {
+            type: Function,
+            default: undefined,
+        },
+        handler: {
+            type: Function,
+            default: undefined,
+        },
+    },
+    render(h, { props }: {props: StateDynamicFieldProps}) {
+        const options: StateOptions = props.options;
+        const statusProps: StatusProps = {
+            icon: get(options, ['icon', 'image'], null),
+            iconColor: getColor(get(options, ['icon', 'color'], null)),
+            textColor: getColor(get(options, ['text_color'], null)),
+            text: props.data === null || props.data === undefined ? '' : String(props.data),
+        };
+
+        const statusEl = h(PStatus, {
+            props: statusProps,
+        });
+
+        if (props.options.link) {
+            return h(PAnchor, {
+                attrs: { href: (props.options as TextOptions).link, target: '_blank' },
+            }, statusEl);
+        }
+
+        return statusEl;
+    },
+};
+</script>
