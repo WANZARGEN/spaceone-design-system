@@ -87,7 +87,11 @@
 </template>
 
 <script lang="ts">
-import { TreeNodeProps, treeNodeProps } from '@/components/molecules/tree/PTreeNode.toolset';
+import {
+    BaseNodeStateType,
+    TreeItem,
+    TreeNodeProps,
+} from '@/components/molecules/tree-node/PTreeNode.toolset';
 import {
     ComponentRenderProxy,
     computed, getCurrentInstance, onMounted, reactive, ref,
@@ -98,11 +102,62 @@ import {
     forEach,
 } from 'lodash';
 
-const PTreeNode = import('@/components/molecules/tree/PTreeNode.vue');
+const PTreeNode = import('@/components/molecules/tree-node/PTreeNode.vue');
+
 export default {
     name: 'PTreeNode',
     components: { PI, PTreeNode },
-    props: treeNodeProps,
+    props: {
+        level: {
+            type: Number,
+            default: 0,
+        },
+        padSize: {
+            type: String,
+            default: '1rem',
+        },
+        toggleSize: {
+            type: String,
+            default: '1rem',
+        },
+        disableToggle: {
+            type: Boolean,
+            default: false,
+        },
+        classNames: {
+            type: Function,
+            default: ({ node }: TreeItem) => ({
+                basic: true,
+                ...node.state,
+            }),
+        },
+        /**
+         * sync
+         */
+        data: {
+            type: [Array, Object, String, Number, Boolean],
+            default: '',
+            required: true,
+        },
+        /**
+         * sync
+         */
+        children: {
+            type: [Array, Boolean],
+            default: false,
+        },
+        /**
+         * sync
+         */
+        state: {
+            type: Object,
+            default: (): BaseNodeStateType => ({ expanded: false, selected: false }),
+            validator(state): boolean {
+                return state instanceof Object && state.expanded !== undefined;
+            },
+            required: true,
+        },
+    },
     setup(props: TreeNodeProps, { emit }) {
         const vm = getCurrentInstance() as ComponentRenderProxy;
         const depth = computed(() => {

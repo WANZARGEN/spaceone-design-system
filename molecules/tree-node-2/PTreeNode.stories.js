@@ -6,16 +6,64 @@ import { getKnobProps } from '@sb/storybook-util';
 import {
     text, number, select, object, boolean,
 } from '@storybook/addon-knobs/vue';
-import casual from '@/components/util/casual';
 import PI from '@/components/atoms/icons/PI.vue';
-import { clone } from 'lodash';
-import PTreeNode from '@/components/molecules/tree/PTreeNode.vue';
-import { treeNodeProps, TreeNodeToolSet } from '@/components/molecules/tree/PTreeNode.toolset';
-import md from '@/components/molecules/tree/PTreeNode.md';
-import style from './PTreeNodes.stories.scss';
+import PTreeNode from '@/components/molecules/tree-node/PTreeNode.vue';
+import { TreeNodeToolSet } from '@/components/molecules/tree-node/PTreeNode.toolset';
+import md from '@/components/molecules/tree-node/PTreeNode.md';
+const treeNodeProps = {
+    level: {
+        type: Number,
+        default: 0,
+    },
+    padSize: {
+        type: String,
+        default: '1rem',
+    },
+    toggleSize: {
+        type: String,
+        default: '1rem',
+    },
+    disableToggle: {
+        type: Boolean,
+        default: false,
+    },
+    classNames: {
+        type: Function,
+        default: ({ node }) => ({
+            basic: true,
+            ...node.state,
+        }),
+    },
+    /**
+     * sync
+     */
+    data: {
+        type: [Array, Object, String, Number, Boolean],
+        default: '',
+        required: true,
+    },
+    /**
+     * sync
+     */
+    children: {
+        type: [Array, Boolean],
+        default: false,
+    },
+    /**
+     * sync
+     */
+    state: {
+        type: Object,
+        default: () => ({ expanded: false, selected: false }),
+        validator(state) {
+            return state instanceof Object && state.expanded !== undefined;
+        },
+        required: true,
+    },
+};
 
 export default {
-    title: 'molecules/tree/TreeNode',
+    title: 'molecules/tree-node/TreeNode',
     component: PTreeNode,
     parameters: {
         notes: md,
