@@ -14,6 +14,9 @@
 		"MONTH": "월 ",
 		"YEAR": "년 "
 	},
+	"DEFINITION_TABLE": {
+		"NO_DATA": " 데이터가 없습니다."
+	},
 	"DICT_INPUT": {
 		"KEY": "키 ",
 		"VALUE": "값 "
@@ -58,6 +61,10 @@
 		"STEP_2_2": "같은 필터일 경우 OR 검색을 하고, 다른 필터일 경우 AND 검색을 합니다.",
 		"STEP_3": "아래의 {operator} 설정을 지원합니다.",
 		"TITLE": "검색 가이드"
+	},
+	"QUERY_SEARCH_TAGS": {
+		"CLEAR_ALL": "모두 지우기",
+		"FILTER": "필터"
 	},
 	"SEARCH": {
 		"PLACEHOLDER": "검색"

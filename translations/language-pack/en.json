@@ -14,6 +14,9 @@
 		"MONTH": "Month",
 		"YEAR": "Year"
 	},
+	"DEFINITION_TABLE": {
+		"NO_DATA": "No Data"
+	},
 	"DICT_INPUT": {
 		"KEY": "Key",
 		"VALUE": "Value"
@@ -58,6 +61,10 @@
 		"STEP_2_2": "OR Search for the same filters, And Search for different filters.",
 		"STEP_3": "We support below {operator}.",
 		"TITLE": "Search Guide"
+	},
+	"QUERY_SEARCH_TAGS": {
+		"CLEAR_ALL": "Clear all",
+		"FILTER": "Filter"
 	},
 	"SEARCH": {
 		"PLACEHOLDER": "Search"
