@@ -1,50 +1,49 @@
-type ClassNames = (node: TreeItem) => {[name: string]: boolean};
+export interface ClassNames {
+    (node: TreeNode): {[name: string]: boolean};
+}
 
-export interface NodeState {
+export interface DataFormatter<T=any> {
+    (node: Omit<TreeNode, 'value'>): string|number;
+}
+
+export interface TreeNode {
+    nodeKey: string|number;
+    level: number;
+    parent: TreeNode|null;
+    children: TreeNode[] | boolean;
+    data: any;
+    value: string|number;
     expanded: boolean;
     selected: boolean;
     loading: boolean;
+    element: HTMLElement|null;
 }
 
 export interface TreeNodeProps {
-    id?: string;
-    level?: number;
     padSize?: number;
     padUnit?: string;
     toggleSize?: string;
     disableToggle?: boolean;
     classNames?: ClassNames;
-    state?: NodeState;
+    dataFormatter?: DataFormatter;
+
+    nodeKey?: string|number;
+    level?: number;
+    parent?: TreeNode|null;
+    children?: TreeNode[] | boolean;
+    data?: any;
+    expanded?: boolean;
+    selected?: boolean;
+    loading?: boolean;
 }
 
-export interface TreeNode {
-    data: any;
-    children: TreeNode[] | boolean;
-    state: NodeState;
-}
+export type TreeNodeEventListenerArgs = [TreeNode, TreeNode[], GlobalEventHandlersEventMap[keyof GlobalEventHandlersEventMap]?]
 
-export const getBaseNodeState = (): NodeState => ({ expanded: false, selected: false, loading: false });
-
-export const getDefaultNode = (data: any, init?: Partial<TreeNode>): TreeNode => ({
+export const getDefaultNode = (data: any, init?: TreeNodeProps): TreeNodeProps => ({
     data,
     children: false,
-    state: getBaseNodeState(),
+    expanded: false,
+    selected: false,
+    loading: false,
     ...init,
 });
-
-export const getTreeItem = (
-    key: number, level: number, node: TreeNode, parent: TreeItem|null = null,
-): TreeItem => ({
-    key,
-    level,
-    node,
-    parent,
-});
-
-export interface TreeItem {
-    key: number;
-    level: number;
-    parent: TreeItem|null;
-    node: TreeNode;
-    el?: HTMLElement;
-}

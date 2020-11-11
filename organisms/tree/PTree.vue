@@ -1,17 +1,21 @@
 <template>
     <div class="p-tree">
-        <p-tree-node v-for="(node, idx) in nodes"
-                     :id="node.id"
-                     :key="idx"
-                     :level="idx"
+        <p-tree-node v-for="(node, idx) in nodes" :key="idx"
                      :pad-size="padSize"
                      :pad-unit="padUnit"
                      :toggle-size="toggleSize"
                      :disable-toggle="disableToggle"
                      :class-names="classNames"
-                     :data="node.data"
+                     :data-formatter="dataFormatter"
+
+                     :node-key="node.nodeKey"
+                     :level="idx"
+                     :parent="null"
                      :children="node.children"
-                     :state="node.state"
+                     :data="node.data"
+                     :expanded="node.expanded"
+                     :selected="node.selected"
+                     :loading="node.loading"
                      @update:data="onUpdateNodeData(node, idx, ...$arguments)"
                      @update:children="onUpdateNodeChildren(node, idx, ...$arguments)"
                      @update:state="onUpdateNodeState(node, idx, ...$arguments)"
@@ -33,60 +37,23 @@ import {
     ComponentRenderProxy, computed, getCurrentInstance, isRef, onMounted, reactive, ref, toRefs,
 } from '@vue/composition-api';
 import {
-    NodeState, TreeItem, TreeNode,
+    TreeNode,
 } from '@/components/molecules/tree-node-2/type';
 import { Fetcher, TreeProps } from '@/components/organisms/tree/type';
 import { makeOptionalProxy } from '@/components/util/composition-helpers';
 import { findIndex, forEach } from 'lodash';
 
-const getBaseNodeState = (): NodeState => ({ expanded: false, selected: false, loading: false });
-
-const getDefaultNode = (data: any, init?: Partial<NodeState>): TreeNode => ({
-    data,
-    children: false,
-    state: getBaseNodeState(),
-    ...init,
-});
-
-const getTreeItem = (
-    key: number, level: number, node: TreeNode, parent: TreeItem,
-) => ({
-    key,
-    level,
-    node,
-    parent,
-});
-
-const setNodeState = ({ node }: TreeItem, _state: Partial<NodeState>) => {
-    node.state = {
-        ...node.state,
-        ..._state,
-    };
-};
-
 export default {
     name: 'PTree',
     components: { PTreeNode },
     props: {
-        data: {
-            type: [Array, Object],
-            default: undefined,
-        },
-        selected: {
-            type: Array,
-            default: undefined,
-        },
-        fetcher: {
-            type: Function,
-            default: d => d,
-        },
-        mapper: {
-            type: Object,
-            default: () => ({}),
-        },
         padSize: {
+            type: Number,
+            default: 1,
+        },
+        padUnit: {
             type: String,
-            default: '1rem',
+            default: 'rem',
         },
         toggleSize: {
             type: String,
@@ -96,19 +63,44 @@ export default {
             type: Boolean,
             default: false,
         },
+        classNames: {
+            type: Function,
+            default: (node: TreeNode) => ({
+                basic: true,
+            }),
+        },
+        dataFormatter: {
+            type: Object,
+            default: undefined,
+        },
+
+        data: {
+            type: [Array, Object],
+            default: undefined,
+        },
+        selectIndex: {
+            type: Array,
+            default: undefined,
+        },
+        fetcher: {
+            type: Function,
+            default: d => d,
+        },
+
     },
     setup(props: TreeProps) {
         const vm = getCurrentInstance() as ComponentRenderProxy;
+
         const data = makeOptionalProxy('data', vm, []);
         const getData = computed<Fetcher>(() => props.fetcher || ((d: any) => Promise.resolve([])));
 
         const state = reactive({
-            nodes: computed(() => {
+            nodes: computed<TreeNode[]>(() => {
                 if (Array.isArray(data.value)) return data.value;
                 return [data.value];
             }),
             selectedNodes: makeOptionalProxy('selected', vm, []),
-            firstSelectedNode: computed(() => state.selectedNodes[0]),
+            firstSelectedNode: computed<TreeNode|null>(() => state.selectedNodes[0]),
             pad: computed(() => {
                 const size = props.padSize?.match(/\d+/g);
                 return size ? Number(size[0]) : 1;
@@ -119,32 +111,27 @@ export default {
             }),
         });
 
-        const applyState = ({ node }: TreeItem) => {
-            node.state = {
-                ...node.state,
-            };
-        };
 
-        const deleteNode = ({ parent, key }: TreeItem) => {
-            if (parent && Array.isArray(parent.node.children)) {
-                parent.node.children.splice(key, 1);
-                if (parent.node.children.length === 0) parent.node.children = false;
-            } else {
-                state.nodes.splice(key, 1);
-            }
-        };
+        // const deleteNode = ({ parent, nodeKey }: TreeNode) => {
+        //     if (parent && Array.isArray(parent.children)) {
+        //         parent.children.splice(nodeKey, 1);
+        //         if (parent.children.length === 0) parent.children = false;
+        //     } else {
+        //         state.nodes.splice(nodeKey, 1);
+        //     }
+        // };
 
-        const resetSelectedNode = (item: TreeItem, compare?: TreeItem) => {
+        const resetSelectedNode = (node: TreeNode, compare?: TreeNode) => {
             if (compare) {
-                if (compare.node.data.id === item.node.data.id) {
-                    state.selectedNodes = [item];
-                    item.node.state.selected = true;
-                } else if (compare.parent) resetSelectedNode(item, compare.parent);
+                if (compare.nodeKey === node.nodeKey) {
+                    state.selectedNodes = [node];
+                    node.selected = true;
+                } else if (compare.parent) resetSelectedNode(node, compare.parent);
             } else {
                 if (!state.firstSelectedNode) return;
                 if (!state.firstSelectedNode.parent) return;
-                if (state.firstSelectedNode.level <= item.level) return;
-                resetSelectedNode(item, state.firstSelectedNode.parent);
+                if (state.firstSelectedNode.level <= node.level) return;
+                resetSelectedNode(node, state.firstSelectedNode.parent);
             }
         };
 
@@ -158,47 +145,42 @@ export default {
         const onUpdateNodeState = () => {
         };
 
-        const onNodeToggle = (item: TreeItem, matched: TreeItem[], e: MouseEvent) => {
+        const onNodeToggle = (node: TreeNode, matched: TreeNode[], e: MouseEvent) => {
             e.stopPropagation();
-            if (item.node.state.expanded) {
-                resetSelectedNode(item);
-                item.node.state.expanded = false;
-                applyState(item);
-                item.node.children = !!item.node.children;
+            if (node.expanded) {
+                resetSelectedNode(node);
+                node.expanded = false;
+                node.children = !!node.children;
                 return;
             }
 
-            vm.$emit('toggle', item, matched);
+            vm.$emit('toggle', node, matched, e);
         };
 
-        const onSelectNode = (item, ...args) => {
+        const onSelectNode = (node: TreeNode, ...args) => {
             if (state.firstSelectedNode) {
-                setNodeState(state.firstSelectedNode, { selected: false });
-                if (state.firstSelectedNode.key === item.key && state.firstSelectedNode.level === item.level) {
+                state.firstSelectedNode.selected = false;
+                if (state.firstSelectedNode.nodeKey === node.nodeKey && state.firstSelectedNode.level === node.level) {
                     state.selectedNodes = [];
                     return;
                 }
             }
-            setNodeState(item, { selected: true });
-            state.selectedNodes = [item];
+            node.selected = true;
+            state.selectedNodes = [node];
 
-            vm.$emit('select', item, ...args);
+            vm.$emit('select', node, ...args);
         };
 
         const onNodeMounted = (...args) => {
             vm.$emit('node-mounted', ...args);
         };
 
-        const fetch = async (item?: TreeItem): Promise<void> => {
-            if (item) {
-                item.node.state.expanded = true;
-                item.node.state.loading = true;
-                applyState(item);
-
-                item.node.children = await getData.value(item);
-
-                item.node.state.loading = false;
-                applyState(item);
+        const fetch = async (node?: TreeNode): Promise<void> => {
+            if (node) {
+                node.expanded = true;
+                node.loading = true;
+                node.children = await getData.value(node);
+                node.loading = false;
             } else {
                 const res = await getData.value();
                 state.nodes = Array.isArray(res) ? res : [];
