@@ -1,19 +1,34 @@
-import { ClassNames, DataFormatter, TreeNode } from '@/components/molecules/tree-node-2/type';
+import {
+    ClassNames, DataFormatter, TreeNode, TreeNodeProps,
+} from '@/components/molecules/tree-node-2/type';
 
-export interface Fetcher {
-    (node?: TreeNode): Promise<any[]>;
+type DataType<T> = T[]
+
+export interface Fetcher<T=any> {
+    (node?: TreeNode<T>): Promise<DataType<T>>;
 }
 
+export interface DefaultTreeNode<T=any> extends TreeNodeProps {
+    data: DataType<T>;
+    expanded: boolean;
+    selected: boolean;
+    loading: boolean;
+}
 
-export interface TreeProps {
+export interface TreeProps<T=any> {
     padSize?: string;
-    padUnit?: string;
     toggleSize?: string;
     disableToggle?: boolean;
-    classNames?: ClassNames;
-    dataFormatter?: DataFormatter;
+    classNames?: ClassNames<T>;
+    dataFormatter?: DataFormatter<T>;
 
-    data?: any[]|Record<string|number, any>;
+    idKey?: number|string;
+    data?: DataType<T>;
     selectIndex?: number[];
-    fetcher?: Fetcher;
+    fetcher?: Fetcher<T>;
+    fetchOnToggle?: boolean;
+}
+
+export interface TreeFunctions<T=any> {
+    fetch(node?: TreeNode<T>): Promise<void>;
 }

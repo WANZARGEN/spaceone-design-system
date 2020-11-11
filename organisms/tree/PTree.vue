@@ -1,26 +1,20 @@
 <template>
     <div class="p-tree">
-        <p-tree-node v-for="(node, idx) in nodes" :key="idx"
-                     :pad-size="padSize"
-                     :pad-unit="padUnit"
+        <p-tree-node v-for="(node, idx) in nodes" :key="idx" :ref="nodeRefs"
+                     :pad-size="pad"
+                     :pad-unit="unit"
                      :toggle-size="toggleSize"
                      :disable-toggle="disableToggle"
                      :class-names="classNames"
                      :data-formatter="dataFormatter"
 
-                     :node-key="node.nodeKey"
-                     :level="idx"
+                     :node-key="getNodeKey(node, idx)"
+                     :level="0"
                      :parent="null"
-                     :children="node.children"
                      :data="node.data"
                      :expanded="node.expanded"
                      :selected="node.selected"
                      :loading="node.loading"
-                     @update:data="onUpdateNodeData(node, idx, ...$arguments)"
-                     @update:children="onUpdateNodeChildren(node, idx, ...$arguments)"
-                     @update:state="onUpdateNodeState(node, idx, ...$arguments)"
-                     @toggle:click="onNodeToggle"
-                     @node:click="onSelectNode"
                      v-on="nodeListeners"
                      @mounted="onNodeMounted"
         >
@@ -37,23 +31,30 @@ import {
     ComponentRenderProxy, computed, getCurrentInstance, isRef, onMounted, reactive, ref, toRefs,
 } from '@vue/composition-api';
 import {
-    TreeNode,
+    TreeNode, TreeNodeProps,
 } from '@/components/molecules/tree-node-2/type';
-import { Fetcher, TreeProps } from '@/components/organisms/tree/type';
+import {
+    DefaultTreeNode, Fetcher, TreeFunctions, TreeProps,
+} from '@/components/organisms/tree/type';
 import { makeOptionalProxy } from '@/components/util/composition-helpers';
-import { findIndex, forEach } from 'lodash';
+import { findIndex, forEach, get } from 'lodash';
+
+const getDefaultNode = (data: any, init?: TreeNodeProps): DefaultTreeNode => ({
+    data,
+    expanded: false,
+    selected: false,
+    loading: false,
+    ...init,
+});
+
 
 export default {
     name: 'PTree',
     components: { PTreeNode },
     props: {
         padSize: {
-            type: Number,
-            default: 1,
-        },
-        padUnit: {
             type: String,
-            default: 'rem',
+            default: '1rem',
         },
         toggleSize: {
             type: String,
@@ -70,7 +71,7 @@ export default {
             }),
         },
         dataFormatter: {
-            type: Object,
+            type: Function,
             default: undefined,
         },
 
@@ -86,20 +87,25 @@ export default {
             type: Function,
             default: d => d,
         },
-
+        fetchOnToggle: {
+            type: Boolean,
+            default: true,
+        },
     },
     setup(props: TreeProps) {
         const vm = getCurrentInstance() as ComponentRenderProxy;
 
-        const data = makeOptionalProxy('data', vm, []);
-        const getData = computed<Fetcher>(() => props.fetcher || ((d: any) => Promise.resolve([])));
+        const proxyState = reactive({
+            data: makeOptionalProxy('data', vm, []),
+        });
 
         const state = reactive({
-            nodes: computed<TreeNode[]>(() => {
-                if (Array.isArray(data.value)) return data.value;
-                return [data.value];
+            nodeRefs: {},
+            nodes: computed<DefaultTreeNode[]>(() => {
+                if (Array.isArray(proxyState.data)) return proxyState.data.map(d => getDefaultNode(d));
+                return [getDefaultNode(proxyState.data)];
             }),
-            selectedNodes: makeOptionalProxy('selected', vm, []),
+            selectedNodes: makeOptionalProxy('selectIndex', vm, []),
             firstSelectedNode: computed<TreeNode|null>(() => state.selectedNodes[0]),
             pad: computed(() => {
                 const size = props.padSize?.match(/\d+/g);
@@ -111,6 +117,11 @@ export default {
             }),
         });
 
+        const getNodeKey = (node: DefaultTreeNode, idx: number) => {
+            if (props.idKey) return get(node.data, props.idKey, idx);
+            return idx;
+        };
+
 
         // const deleteNode = ({ parent, nodeKey }: TreeNode) => {
         //     if (parent && Array.isArray(parent.children)) {
@@ -121,43 +132,55 @@ export default {
         //     }
         // };
 
-        const resetSelectedNode = (node: TreeNode, compare?: TreeNode) => {
+
+        const resetSelectedState = (node: TreeNode, compare?: TreeNode) => {
             if (compare) {
                 if (compare.nodeKey === node.nodeKey) {
                     state.selectedNodes = [node];
-                    node.selected = true;
-                } else if (compare.parent) resetSelectedNode(node, compare.parent);
+                    node.setState('selected', true);
+                } else if (compare.parent) resetSelectedState(node, compare.parent);
             } else {
                 if (!state.firstSelectedNode) return;
                 if (!state.firstSelectedNode.parent) return;
                 if (state.firstSelectedNode.level <= node.level) return;
-                resetSelectedNode(node, state.firstSelectedNode.parent);
+                resetSelectedState(node, state.firstSelectedNode.parent);
             }
         };
 
+        const fetch: TreeFunctions['fetch'] = async (node?: TreeNode): Promise<void> => {
+            if (!props.fetcher) return;
 
-        const onUpdateNodeData = () => {
+            if (node) {
+                node.setState('loading', true);
+
+                const res = await props.fetcher(node);
+                node.setChildren(res);
+
+                node.setState('loading', false);
+
+            } else {
+                proxyState.data = await props.fetcher();
+            }
+
+            console.debug('proxyState.data', proxyState.data);
         };
 
-        const onUpdateNodeChildren = () => {
-        };
 
-        const onUpdateNodeState = () => {
-        };
-
-        const onNodeToggle = (node: TreeNode, matched: TreeNode[], e: MouseEvent) => {
+        const onToggleClick = async (node: TreeNode, matched: TreeNode[], e: MouseEvent) => {
             e.stopPropagation();
             if (node.expanded) {
-                resetSelectedNode(node);
-                node.expanded = false;
-                node.children = !!node.children;
+                resetSelectedState(node);
+                node.setState('expanded', false);
                 return;
             }
+
+            node.setState('expanded', true);
+            if (props.fetchOnToggle) await fetch(node);
 
             vm.$emit('toggle', node, matched, e);
         };
 
-        const onSelectNode = (node: TreeNode, ...args) => {
+        const onNodeSelect = (node: TreeNode, ...args) => {
             if (state.firstSelectedNode) {
                 state.firstSelectedNode.selected = false;
                 if (state.firstSelectedNode.nodeKey === node.nodeKey && state.firstSelectedNode.level === node.level) {
@@ -165,54 +188,45 @@ export default {
                     return;
                 }
             }
-            node.selected = true;
+            node.setState('selected', true);
             state.selectedNodes = [node];
 
             vm.$emit('select', node, ...args);
         };
 
+        const nodeListeners = {
+            ...vm.$listeners,
+            'toggle-click': onToggleClick,
+            'node-select': onNodeSelect,
+        };
+
+
         const onNodeMounted = (...args) => {
             vm.$emit('node-mounted', ...args);
         };
 
-        const fetch = async (node?: TreeNode): Promise<void> => {
-            if (node) {
-                node.expanded = true;
-                node.loading = true;
-                node.children = await getData.value(node);
-                node.loading = false;
-            } else {
-                const res = await getData.value();
-                state.nodes = Array.isArray(res) ? res : [];
-            }
-        };
-
 
         onMounted(() => {
+            console.debug('nodeRefs', state.nodeRefs);
             vm.$emit('mounted');
         });
 
-        const nodeListeners = {};
 
-        const init = () => {
-            forEach(vm.$listeners, (l, eventName: string) => {
-                if (!eventName.startsWith('update')) {
-                    nodeListeners[eventName] = (...args) => { vm.$emit(eventName, ...args); };
-                }
-            });
+        const init = async () => {
+            if (props.fetcher) await fetch();
         };
 
         /* init */
-        init();
+        (async () => {
+            await init();
+        })();
 
         return {
-            nodeListeners,
             ...toRefs(state),
-            onUpdateNodeData,
-            onUpdateNodeChildren,
-            onUpdateNodeState,
-            onNodeToggle,
-            onSelectNode,
+            getNodeKey,
+            nodeListeners,
+            onToggleClick,
+            onNodeSelect,
             onNodeMounted,
             fetch,
         };

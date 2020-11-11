@@ -1,6 +1,10 @@
 <template>
     <div ref="nodeRef" class="p-tree-node">
-        <div :class="{...classNames(node), expanded, selected, loading, [`level-${level}`]: true}"
+        <div :class="{...classNames(node),
+                      expanded: proxyState.expanded,
+                      selected: proxyState.selected,
+                      loading: proxyState.loading,
+                      [`level-${level}`]: true}"
              :style="{paddingLeft: depth}"
              v-on="getListeners('row')"
         >
@@ -24,8 +28,8 @@
                                           :name="`toggle-${level}`" v-bind="slotProps"
                                     >
                                         <slot name="toggle" v-bind="slotProps">
-                                            <p-i v-if="children"
-                                                 :name="expanded ? 'ic_tree_arrow--opened' : 'ic_tree_arrow'"
+                                            <p-i v-if="proxyState.children"
+                                                 :name="proxyState.expanded ? 'ic_tree_arrow--opened' : 'ic_tree_arrow'"
                                                  :width="toggleSize" :height="toggleSize"
                                                  color="inherit transparent"
                                             />
@@ -49,7 +53,7 @@
                                 <span class="data" v-on="getListeners('data')">
                                     <slot :name="`data-${level}`" v-bind="slotProps">
                                         <slot name="data" v-bind="slotProps">
-                                            {{ data }}
+                                            {{ node.value }}
                                         </slot>
                                     </slot>
                                 </span>
@@ -66,8 +70,8 @@
                 </slot>
             </slot>
         </div>
-        <div v-if="children && expanded" class="children">
-            <p-tree-node v-for="(child, idx) in children" :key="idx"
+        <div v-if="proxyState.expanded" class="children">
+            <p-tree-node v-for="(child, idx) in proxyState.children" :key="idx"
                          :pad-size="padSize"
                          :pad-unit="padUnit"
                          :toggle-size="toggleSize"
@@ -77,8 +81,9 @@
 
                          :node-key="child.nodeKey"
                          :level="level + 1"
+                         :parent="node"
                          :data="child.data"
-                         :children="child.children"
+
                          v-on="passChildEventToParentNode()"
             >
                 <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
@@ -91,23 +96,24 @@
 
 <script lang="ts">
 import {
-    TreeNodeProps, TreeNode, TreeNodeEventListenerArgs,
+    TreeNodeProps, TreeNode, TreeNodeEventHandler, TreeNodeFunctions,
 } from '@/components/molecules/tree-node-2/type';
 import {
     ComponentRenderProxy,
-    computed, getCurrentInstance, onMounted, reactive, toRefs,
+    computed, defineComponent, getCurrentInstance, onMounted, reactive, toRefs,
 } from '@vue/composition-api';
 import PI from '@/components/atoms/icons/PI.vue';
 import {
-    forEach,
+    forEach, get,
 } from 'lodash';
+import { makeOptionalProxy } from '@/components/util/composition-helpers';
 
 
 const PTreeNode = import('@/components/molecules/tree-node-2/PTreeNode.vue');
 
-export default {
+export default defineComponent({
     name: 'PTreeNode',
-    components: { PI, PTreeNode },
+    components: { PI, PTreeNode: PTreeNode as any },
     props: {
         padSize: {
             type: Number,
@@ -132,7 +138,11 @@ export default {
             }),
         },
         dataFormatter: {
-            type: Object,
+            type: Function,
+            default: undefined,
+        },
+        idKey: {
+            type: [String, Number],
             default: undefined,
         },
         nodeKey: {
@@ -148,29 +158,36 @@ export default {
             default: '',
             required: true,
         },
-        children: {
-            type: [Array, Boolean],
-            default: false,
-        },
         parent: {
             type: Object,
             default: () => null,
         },
-        expanded: {
-            type: Boolean,
-            default: undefined,
-        },
-        selected: {
-            type: Boolean,
-            default: undefined,
-        },
-        loading: {
-            type: Boolean,
-            default: undefined,
-        },
     },
     setup(props: TreeNodeProps, { emit }) {
         const vm = getCurrentInstance() as ComponentRenderProxy;
+
+        const proxyState = reactive({
+            children: [] as TreeNodeProps[]|null,
+            expanded: false,
+            selected: false,
+            loading: false,
+            data: makeOptionalProxy('data', vm, ''),
+        });
+
+        const setChildren: TreeNodeFunctions['setChildren'] = (childrenData: any[]|null = null) => {
+            if (!childrenData || childrenData.length === 0) {
+                proxyState.children = null;
+                return;
+            }
+            proxyState.children = childrenData.map((d, i) => ({
+                nodeKey: props.idKey ? get(d, props.idKey, i) : i,
+                data: d,
+            }));
+        };
+
+        const setState: TreeNodeFunctions['setState'] = (name, value) => {
+            proxyState[name] = value;
+        };
 
         const state = reactive({
             depth: computed(() => `${(props.level || 0) * (props.padSize || 1)}${props.padUnit || 'rem'}`),
@@ -181,15 +198,19 @@ export default {
                     nodeKey: state.proxyNodeKey,
                     level: props.level,
                     parent: props.parent,
-                    children: props.children,
-                    data: props.data,
+                    children: proxyState.children,
+                    data: proxyState.data,
                     value: props.data,
-                    expanded: props.expanded,
-                    selected: props.selected,
-                    loading: props.loading,
+                    expanded: proxyState.expanded,
+                    selected: proxyState.selected,
+                    loading: proxyState.loading,
                     element: state.nodeRef,
+                    setChildren,
+                    setState,
                 };
+
                 if (props.dataFormatter) res.value = props.dataFormatter(res);
+
                 return res;
             }),
         });
@@ -208,9 +229,9 @@ export default {
         };
 
         const passChildEventToParentNode = () => {
-            const res = {};
+            const res: Record<string, TreeNodeEventHandler> = {};
             forEach(vm.$listeners, (l, eventName: string) => {
-                res[eventName] = ([node, matched, e]: TreeNodeEventListenerArgs) => {
+                res[eventName] = (node, matched, e) => {
                     emit(eventName, node, [{ ...state.node }, ...matched], e);
                 };
             });
@@ -218,7 +239,7 @@ export default {
         };
 
         const slotProps = computed(() => ({
-            node: state.node, depth: state.depth,
+            node: state.node, depth: state.depth, props,
         }));
 
 
@@ -227,14 +248,20 @@ export default {
             emit('mounted', node, [node]);
         });
 
+        const appendNode = () => {
+        };
+
+
         return {
+            proxyState,
             ...toRefs(state),
             slotProps,
             getListeners,
             passChildEventToParentNode,
+            setChildren,
         };
     },
-};
+});
 </script>
 
 <style lang="postcss">

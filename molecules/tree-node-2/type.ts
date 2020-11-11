@@ -1,17 +1,23 @@
-export interface ClassNames {
-    (node: TreeNode): {[name: string]: boolean};
+export interface ClassNames<T=any> {
+    (node: TreeNode<T>): {[name: string]: boolean};
 }
 
 export interface DataFormatter<T=any> {
-    (node: Omit<TreeNode, 'value'>): string|number;
+    (node: Omit<TreeNode<T>, 'value'>): string|number;
 }
 
-export interface TreeNode {
+export interface TreeNodeFunctions<T=any> {
+    setData<T>(data: T): void;
+    setState<T>(name: 'expanded'|'selected'|'loading', value: boolean): void;
+    setChildren<T>(children?: T[]): void;
+}
+
+export interface TreeNode<T=any> extends TreeNodeFunctions<T> {
     nodeKey: string|number;
     level: number;
-    parent: TreeNode|null;
-    children: TreeNode[] | boolean;
-    data: any;
+    parent: TreeNode<T>|null;
+    children: TreeNodeProps<T>[];
+    data: T;
     value: string|number;
     expanded: boolean;
     selected: boolean;
@@ -19,31 +25,25 @@ export interface TreeNode {
     element: HTMLElement|null;
 }
 
-export interface TreeNodeProps {
+export interface TreeNodeProps<T=any> {
     padSize?: number;
     padUnit?: string;
     toggleSize?: string;
     disableToggle?: boolean;
-    classNames?: ClassNames;
-    dataFormatter?: DataFormatter;
+    classNames?: ClassNames<T>;
+    dataFormatter?: DataFormatter<T>;
+    idKey?: number|string;
 
     nodeKey?: string|number;
     level?: number;
-    parent?: TreeNode|null;
-    children?: TreeNode[] | boolean;
-    data?: any;
-    expanded?: boolean;
-    selected?: boolean;
-    loading?: boolean;
+    parent?: TreeNode<T>|null;
+    data?: T;
 }
 
-export type TreeNodeEventListenerArgs = [TreeNode, TreeNode[], GlobalEventHandlersEventMap[keyof GlobalEventHandlersEventMap]?]
 
-export const getDefaultNode = (data: any, init?: TreeNodeProps): TreeNodeProps => ({
-    data,
-    children: false,
-    expanded: false,
-    selected: false,
-    loading: false,
-    ...init,
-});
+export interface TreeNodeEventHandler<T=any> {
+    (node: TreeNode<T>, matched: TreeNode<T>[], e: GlobalEventHandlersEventMap[keyof GlobalEventHandlersEventMap], ...args: any[]): Promise<void>|void;
+}
+export interface TreeNodeMountEventListener<T=any> {
+    (node: TreeNode<T>, matched: TreeNode<T>[], e?: GlobalEventHandlersEventMap[keyof GlobalEventHandlersEventMap]): Promise<void>|void;
+}
