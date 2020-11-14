@@ -81,6 +81,7 @@ module.exports = {
       "error",
       { allows: ["protected", "public"] }
     ],
+    "@typescript-eslint/no-use-before-define": ["off"], // use eslint rule
     "@typescript-eslint/camelcase": ["off"], // use eslint camelcase rule
     "@typescript-eslint/no-empty-function": ["off"], // use eslint no-empty-function rule
     "@typescript-eslint/ban-ts-ignore": ["off"],

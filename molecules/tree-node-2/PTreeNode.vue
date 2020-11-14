@@ -1,9 +1,9 @@
 <template>
-    <div ref="nodeRef" class="p-tree-node">
+    <div v-show="isReady" ref="nodeRef" class="p-tree-node">
         <div :class="{...classNames(node),
-                      expanded: proxyState.expanded,
-                      selected: proxyState.selected,
-                      loading: proxyState.loading,
+                      expanded: mutableState.expanded,
+                      selected: mutableState.selected,
+                      loading: mutableState.loading,
                       [`level-${level}`]: true}"
              :style="{paddingLeft: depth}"
              v-on="getListeners('row')"
@@ -14,7 +14,7 @@
                         <slot :name="`node-level-${level}`" v-bind="slotProps">
                             <slot name="node" v-bind="slotProps">
                                 <span v-if="$scopedSlots[`left-extra-${level}`] || $scopedSlots[`left-extra`]"
-                                      class="left-extra" v-on="getListeners('left-extra')"
+                                      class="left-extra"
                                 >
                                     <slot :name="`left-extra-level-${level}`" v-bind="slotProps">
                                         <slot name="left-extra" v-bind="slotProps" />
@@ -28,8 +28,8 @@
                                           :name="`toggle-${level}`" v-bind="slotProps"
                                     >
                                         <slot name="toggle" v-bind="slotProps">
-                                            <p-i v-if="proxyState.children"
-                                                 :name="proxyState.expanded ? 'ic_tree_arrow--opened' : 'ic_tree_arrow'"
+                                            <p-i v-if="hasChild"
+                                                 :name="mutableState.expanded ? 'ic_tree_arrow--opened' : 'ic_tree_arrow'"
                                                  :width="toggleSize" :height="toggleSize"
                                                  color="inherit transparent"
                                             />
@@ -37,20 +37,20 @@
                                     </slot>
                                 </span>
                                 <span v-if="$scopedSlots[`toggle-right-${level}`] || $scopedSlots[`toggle-right`]"
-                                      class="toggle-right" v-on="getListeners('toggle-right')"
+                                      class="toggle-right"
                                 >
                                     <slot :name="`toggle-right-level-${level}`" v-bind="slotProps">
                                         <slot name="toggle-right" v-bind="slotProps" />
                                     </slot>
                                 </span>
                                 <span v-if="$scopedSlots[`icon-${level}`] || $scopedSlots[`icon`]"
-                                      class="icon" v-on="getListeners('icon')"
+                                      class="icon"
                                 >
                                     <slot :name="`icon-level-${level}`" v-bind="slotProps">
                                         <slot name="icon" v-bind="slotProps" />
                                     </slot>
                                 </span>
-                                <span class="data" v-on="getListeners('data')">
+                                <span class="data">
                                     <slot :name="`data-${level}`" v-bind="slotProps">
                                         <slot name="data" v-bind="slotProps">
                                             {{ node.value }}
@@ -58,7 +58,7 @@
                                     </slot>
                                 </span>
                                 <span v-if="$scopedSlots[`right-extra-${level}`] || $scopedSlots[`right-extra`]"
-                                      class="right-extra" v-on="getListeners('right-extra')"
+                                      class="right-extra"
                                 >
                                     <slot :name="`right-extra-${level}`" v-bind="slotProps">
                                         <slot name="right-extra" v-bind="slotProps" />
@@ -70,21 +70,23 @@
                 </slot>
             </slot>
         </div>
-        <div v-if="proxyState.expanded" class="children">
-            <p-tree-node v-for="(child, idx) in proxyState.children" :key="idx"
+        <div v-if="mutableState.expanded" class="children">
+            <p-tree-node v-for="(child, idx) in mutableState.children" :key="idx"
                          :pad-size="padSize"
                          :pad-unit="padUnit"
                          :toggle-size="toggleSize"
                          :disable-toggle="disableToggle"
                          :class-names="classNames"
-                         :data-formatter="dataFormatter"
+                         :node-formatter="nodeFormatter"
+                         :value-formatter="valueFormatter"
+                         :id-key="idKey"
 
-                         :node-key="child.nodeKey"
+                         :index="idx"
                          :level="level + 1"
                          :parent="node"
-                         :data="child.data"
+                         :data="child"
 
-                         v-on="passChildEventToParentNode()"
+                         v-on="childrenListeners"
             >
                 <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
                     <slot :name="slot" v-bind="scope" />
@@ -95,21 +97,24 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable no-use-before-define */
+
 import {
-    TreeNodeProps, TreeNode, TreeNodeEventHandler, TreeNodeFunctions,
+    TreeNodeProps, TreeNode, TreeNodeFunctions, TreeNodeMutableData,
 } from '@/components/molecules/tree-node-2/type';
 import {
     ComponentRenderProxy,
-    computed, defineComponent, getCurrentInstance, onMounted, reactive, toRefs,
+    computed, defineComponent, getCurrentInstance, onMounted, onUpdated, reactive, toRefs,
 } from '@vue/composition-api';
 import PI from '@/components/atoms/icons/PI.vue';
 import {
-    forEach, get,
+    forEach, get, set, remove, find,
 } from 'lodash';
-import { makeOptionalProxy } from '@/components/util/composition-helpers';
+import { getUUID } from '@/components/molecules/tree-node-2/helper';
 
 
 const PTreeNode = import('@/components/molecules/tree-node-2/PTreeNode.vue');
+
 
 export default defineComponent({
     name: 'PTreeNode',
@@ -137,17 +142,21 @@ export default defineComponent({
                 basic: true,
             }),
         },
-        dataFormatter: {
+        nodeFormatter: {
+            type: Function,
+            default: undefined,
+        },
+        valueFormatter: {
             type: Function,
             default: undefined,
         },
         idKey: {
-            type: [String, Number],
+            type: [Number, String],
             default: undefined,
         },
-        nodeKey: {
-            type: [String, Number],
-            default: undefined,
+        index: {
+            type: Number,
+            default: 0,
         },
         level: {
             type: Number,
@@ -165,51 +174,107 @@ export default defineComponent({
     },
     setup(props: TreeNodeProps, { emit }) {
         const vm = getCurrentInstance() as ComponentRenderProxy;
+        const id = getUUID();
+        let childrenInitCount = 0;
 
-        const proxyState = reactive({
-            children: [] as TreeNodeProps[]|null,
+        const mutableState = reactive({
+            children: null as null|any[],
             expanded: false,
             selected: false,
             loading: false,
-            data: makeOptionalProxy('data', vm, ''),
+            data: props.data,
         });
 
-        const setChildren: TreeNodeFunctions['setChildren'] = (childrenData: any[]|null = null) => {
-            if (!childrenData || childrenData.length === 0) {
-                proxyState.children = null;
-                return;
-            }
-            proxyState.children = childrenData.map((d, i) => ({
-                nodeKey: props.idKey ? get(d, props.idKey, i) : i,
-                data: d,
-            }));
+        const setChildren: TreeNodeFunctions['setChildren'] = (childrenData: any[]|null, emitEvent = true) => {
+            /** init childrenNodes */
+            childrenInitCount = 0;
+            state.childNodes = [];
+
+            /** set children */
+            if (!childrenData || !Array.isArray(childrenData)) mutableState.children = null;
+            else mutableState.children = childrenData;
+            emitUpdate({ children: mutableState.children });
         };
 
-        const setState: TreeNodeFunctions['setState'] = (name, value) => {
-            proxyState[name] = value;
+        const setSelected: TreeNodeFunctions['setSelected'] = (value) => {
+            mutableState.selected = value;
+            emit('update-selected', state.node);
+            emitUpdate({ selected: value });
+        };
+
+        const setLoading: TreeNodeFunctions['setLoading'] = (value) => {
+            mutableState.loading = value;
+            emitUpdate({ loading: value });
+        };
+
+        const setExpanded: TreeNodeFunctions['setExpanded'] = (value) => {
+            mutableState.expanded = value;
+            emitUpdate({ expanded: value });
+        };
+
+        const setData: TreeNodeFunctions['setData'] = (data) => {
+            mutableState.data = data;
+            emitUpdate({ data });
+        };
+
+        const appendChild: TreeNodeFunctions['appendChild'] = (data) => {
+            if (mutableState.children) setChildren([...mutableState.children, data]);
+            else setChildren([data]);
+        };
+
+        const deleteChild: TreeNodeFunctions['deleteChild'] = (node) => {
+            if (mutableState.children) {
+                setChildren(mutableState.children.splice(node.index, 1));
+            }
+        };
+
+        const findChildNodes: TreeNodeFunctions['findChildNodes'] = (predicate, recursive = false) => {
+            const res = [] as TreeNode[];
+            state.childNodes.forEach((d) => {
+                if (predicate(d)) res.push(d);
+                if (recursive) res.push(...d.findChildNodes(predicate, true));
+            });
+            return res;
         };
 
         const state = reactive({
+            initFinished: false,
+            nodeId: computed(() => (props.idKey ? get(mutableState.data, props.idKey, id) : id)),
+            hasChild: computed(() => !!mutableState.children),
+            isReady: false,
             depth: computed(() => `${(props.level || 0) * (props.padSize || 1)}${props.padUnit || 'rem'}`),
-            nodeRef: null as null | HTMLElement,
-            proxyNodeKey: computed(() => (props.nodeKey === undefined ? vm.$vnode.key || 0 : props.nodeKey)),
+            nodeRef: null as null|HTMLElement,
+            childNodes: [] as TreeNode[],
             node: computed(() => {
-                const res = {
-                    nodeKey: state.proxyNodeKey,
-                    level: props.level,
-                    parent: props.parent,
-                    children: proxyState.children,
-                    data: proxyState.data,
-                    value: props.data,
-                    expanded: proxyState.expanded,
-                    selected: proxyState.selected,
-                    loading: proxyState.loading,
+                const res: TreeNode = {
+                    nodeId: state.nodeId,
+                    index: props.index as number,
+                    level: props.level as number,
+                    parent: props.parent || null,
+                    children: mutableState.children ? [...mutableState.children] : mutableState.children,
+                    childNodes: state.childNodes,
+                    data: mutableState.data,
+                    value: mutableState.data,
+                    expanded: mutableState.expanded,
+                    selected: mutableState.selected,
+                    loading: mutableState.loading,
                     element: state.nodeRef,
+                    matched: [],
                     setChildren,
-                    setState,
+                    setSelected,
+                    setLoading,
+                    setExpanded,
+                    setData,
+                    appendChild,
+                    deleteChild,
+                    findChildNodes,
                 };
 
-                if (props.dataFormatter) res.value = props.dataFormatter(res);
+                if (props.valueFormatter) res.value = props.valueFormatter(res);
+
+                // @ts-ignore
+                if (props.parent && props.parent.matched) res.matched = [...props.parent.matched, res];
+                else res.matched = [res];
 
                 return res;
             }),
@@ -218,24 +283,22 @@ export default defineComponent({
         const getListeners = (type: string) => {
             const res = {};
             forEach(vm.$listeners, (l, eventName: string) => {
-                if (eventName.startsWith(type)) {
-                    res[`${eventName.substring(type.length + 1)}`] = (e) => {
-                        const node = { ...state.node };
-                        emit(eventName, node, [node], e);
+                if (eventName.endsWith(type)) {
+                    res[`${eventName.substring(0, eventName.length - type.length - 1)}`] = (e) => {
+                        emit(eventName, state.node, e);
                     };
                 }
             });
             return res;
         };
 
-        const passChildEventToParentNode = () => {
-            const res: Record<string, TreeNodeEventHandler> = {};
-            forEach(vm.$listeners, (l, eventName: string) => {
-                res[eventName] = (node, matched, e) => {
-                    emit(eventName, node, [{ ...state.node }, ...matched], e);
-                };
-            });
-            return res;
+        const emitUpdate = (item: Partial<TreeNode>) => {
+            emit('update', state.node, item);
+        };
+
+        const emitInit = () => {
+            emit('init', state.node);
+            state.initFinished = true;
         };
 
         const slotProps = computed(() => ({
@@ -243,22 +306,38 @@ export default defineComponent({
         }));
 
 
-        onMounted(() => {
-            const node = { ...state.node };
-            emit('mounted', node, [node]);
-        });
+        const childrenListeners = {
+            ...vm.$listeners,
+            init(node: TreeNode) {
+                if (mutableState.children === null) return;
 
-        const appendNode = () => {
+                childrenInitCount += 1;
+                state.childNodes.push(node);
+                if (childrenInitCount === mutableState.children.length) {
+                    if (state.initFinished) {
+                        emitUpdate({ childNodes: state.childNodes });
+                    } else emitInit();
+                }
+            },
         };
+
+        (async () => {
+            if (props.nodeFormatter) {
+                const res = props.nodeFormatter(state.node);
+                if (res instanceof Promise) await res;
+            }
+            state.isReady = true;
+            if (mutableState.children === null) emitInit();
+        })();
 
 
         return {
-            proxyState,
             ...toRefs(state),
+            mutableState,
             slotProps,
             getListeners,
-            passChildEventToParentNode,
             setChildren,
+            childrenListeners,
         };
     },
 });

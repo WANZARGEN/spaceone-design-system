@@ -1,22 +1,18 @@
 <template>
     <div class="p-tree">
-        <p-tree-node v-for="(node, idx) in nodes" :key="idx" :ref="nodeRefs"
+        <p-tree-node v-for="(node, idx) in data" :key="idx"
                      :pad-size="pad"
                      :pad-unit="unit"
                      :toggle-size="toggleSize"
                      :disable-toggle="disableToggle"
                      :class-names="classNames"
-                     :data-formatter="dataFormatter"
-
-                     :node-key="getNodeKey(node, idx)"
-                     :level="0"
-                     :parent="null"
-                     :data="node.data"
-                     :expanded="node.expanded"
-                     :selected="node.selected"
-                     :loading="node.loading"
+                     :id-key="idKey"
+                     :value-formatter="valueFormatter"
+                     :node-formatter="nodeFormatter"
+                     :index="idx"
+                     :data="node"
+                     :parent="root"
                      v-on="nodeListeners"
-                     @mounted="onNodeMounted"
         >
             <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
                 <slot :name="slot" v-bind="scope" />
@@ -26,26 +22,23 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable no-use-before-define */
+
 import PTreeNode from '@/components/molecules/tree-node-2/PTreeNode.vue';
 import {
-    ComponentRenderProxy, computed, getCurrentInstance, isRef, onMounted, reactive, ref, toRefs,
+    ComponentRenderProxy, computed, getCurrentInstance, isRef, onMounted, reactive, ref, toRefs, watch,
 } from '@vue/composition-api';
 import {
-    TreeNode, TreeNodeProps,
+    DefaultTreeNode,
+    TreeNode, TreeNodeEventHandler, TreeNodeEventListeners, TreeNodeProps,
 } from '@/components/molecules/tree-node-2/type';
 import {
-    DefaultTreeNode, Fetcher, TreeFunctions, TreeProps,
+    Fetcher, TreeRootNode, TreeFunctions, TreeProps,
 } from '@/components/organisms/tree/type';
 import { makeOptionalProxy } from '@/components/util/composition-helpers';
-import { findIndex, forEach, get } from 'lodash';
-
-const getDefaultNode = (data: any, init?: TreeNodeProps): DefaultTreeNode => ({
-    data,
-    expanded: false,
-    selected: false,
-    loading: false,
-    ...init,
-});
+import {
+    findIndex, forEach, get, remove, set, find,
+} from 'lodash';
 
 
 export default {
@@ -70,17 +63,21 @@ export default {
                 basic: true,
             }),
         },
-        dataFormatter: {
+        nodeFormatter: {
             type: Function,
+            default: undefined,
+        },
+        valueFormatter: {
+            type: Function,
+            default: undefined,
+        },
+        idKey: {
+            type: [Number, String],
             default: undefined,
         },
 
         data: {
             type: [Array, Object],
-            default: undefined,
-        },
-        selectIndex: {
-            type: Array,
             default: undefined,
         },
         fetcher: {
@@ -91,21 +88,45 @@ export default {
             type: Boolean,
             default: true,
         },
+        fetchOnInit: {
+            type: Boolean,
+            default: true,
+        },
+        selectable: {
+            type: Boolean,
+            default: true,
+        },
+        disableMultiSelect: {
+            type: Boolean,
+            default: true,
+        },
+        toggleOnSelect: {
+            type: Boolean,
+            default: true,
+        },
+        selectReleasable: {
+            type: Boolean,
+            default: true,
+        },
     },
     setup(props: TreeProps) {
         const vm = getCurrentInstance() as ComponentRenderProxy;
+        let nodeInitCount = 0;
 
         const proxyState = reactive({
-            data: makeOptionalProxy('data', vm, []),
+            data: makeOptionalProxy<any>('data', vm, []),
         });
 
+        // eslint-disable-next-line no-empty-function
+        const dummyFunction: any = () => {};
+
         const state = reactive({
-            nodeRefs: {},
-            nodes: computed<DefaultTreeNode[]>(() => {
-                if (Array.isArray(proxyState.data)) return proxyState.data.map(d => getDefaultNode(d));
-                return [getDefaultNode(proxyState.data)];
+            nodeData: computed<any[]|null>(() => {
+                if (Array.isArray(proxyState.data)) return proxyState.data;
+                if (proxyState.data === null || proxyState.data === undefined) return null;
+                return [proxyState.data];
             }),
-            selectedNodes: makeOptionalProxy('selectIndex', vm, []),
+            selectedNodes: [] as TreeNode[],
             firstSelectedNode: computed<TreeNode|null>(() => state.selectedNodes[0]),
             pad: computed(() => {
                 const size = props.padSize?.match(/\d+/g);
@@ -115,35 +136,66 @@ export default {
                 const unit = props.padSize?.match(/[a-zA-Z]+/g);
                 return unit ? unit[0] : 'rem';
             }),
+            initiatedNodes: [] as TreeNode[],
+            root: computed<TreeNode>(() => ({
+                nodeId: 'root',
+                index: -1,
+                level: -1,
+                parent: null,
+                children: state.nodeData,
+                childNodes: state.initiatedNodes,
+                data: undefined,
+                value: undefined,
+                element: null,
+                matched: [],
+                selectedNodes: state.selectedNodes,
+                fetch,
+                resetSelected,
+                appendChild,
+                deleteChild,
+                findChildNodes,
+                setData: dummyFunction,
+                setSelected: dummyFunction,
+                setLoading: dummyFunction,
+                setExpanded: dummyFunction,
+                setChildren: dummyFunction,
+            })),
         });
 
-        const getNodeKey = (node: DefaultTreeNode, idx: number) => {
-            if (props.idKey) return get(node.data, props.idKey, idx);
-            return idx;
+        const appendChild: TreeFunctions['appendChild'] = (data) => {
+            if (proxyState.data) proxyState.data.push(data);
+            else proxyState.data = [data];
+        };
+
+        const deleteChild: TreeFunctions['deleteChild'] = (node) => {
+            if (node.parent) {
+                const parent = node.parent;
+                parent.deleteChild(node);
+            } else {
+                remove<TreeNode>(state.initiatedNodes, d => d.index === node?.index);
+            }
+        };
+
+        const findChildNodes: TreeFunctions['findChildNodes'] = (predicate, recursive) => {
+            const res = [] as TreeNode[];
+            state.initiatedNodes.forEach((d) => {
+                if (predicate(d)) res.push(d);
+                if (recursive) res.push(...d.findChildNodes(predicate, true));
+            });
+            return res;
         };
 
 
-        // const deleteNode = ({ parent, nodeKey }: TreeNode) => {
-        //     if (parent && Array.isArray(parent.children)) {
-        //         parent.children.splice(nodeKey, 1);
-        //         if (parent.children.length === 0) parent.children = false;
-        //     } else {
-        //         state.nodes.splice(nodeKey, 1);
-        //     }
-        // };
-
-
-        const resetSelectedState = (node: TreeNode, compare?: TreeNode) => {
-            if (compare) {
-                if (compare.nodeKey === node.nodeKey) {
-                    state.selectedNodes = [node];
-                    node.setState('selected', true);
-                } else if (compare.parent) resetSelectedState(node, compare.parent);
+        const resetSelected: TreeFunctions['resetSelected'] = (node?) => {
+            if (node) {
+                node.setSelected(false);
+                if (node.children) {
+                    state.selectedNodes.forEach((d) => {
+                        if (d.matched.some(m => node.nodeId === m.nodeId)) node.setSelected(false);
+                    });
+                }
             } else {
-                if (!state.firstSelectedNode) return;
-                if (!state.firstSelectedNode.parent) return;
-                if (state.firstSelectedNode.level <= node.level) return;
-                resetSelectedState(node, state.firstSelectedNode.parent);
+                state.selectedNodes.forEach(d => d.setSelected(false));
             }
         };
 
@@ -151,69 +203,105 @@ export default {
             if (!props.fetcher) return;
 
             if (node) {
-                node.setState('loading', true);
+                node.setLoading(true);
 
                 const res = await props.fetcher(node);
-                node.setChildren(res);
+                node.setChildren(res.length > 0 ? res : null);
 
-                node.setState('loading', false);
-
+                node.setLoading(false);
             } else {
                 proxyState.data = await props.fetcher();
             }
 
-            console.debug('proxyState.data', proxyState.data);
+            vm.$emit('fetched', state.root);
         };
 
 
-        const onToggleClick = async (node: TreeNode, matched: TreeNode[], e: MouseEvent) => {
-            e.stopPropagation();
+        const onClickToggle: TreeNodeEventHandler = async (node, e) => {
+            (e as MouseEvent).stopPropagation();
+
             if (node.expanded) {
-                resetSelectedState(node);
-                node.setState('expanded', false);
+                resetSelected(node);
+                node.setExpanded(false);
                 return;
             }
 
-            node.setState('expanded', true);
+            node.setExpanded(true);
             if (props.fetchOnToggle) await fetch(node);
 
-            vm.$emit('toggle', node, matched, e);
+            vm.$emit('click-toggle', node, e);
         };
 
-        const onNodeSelect = (node: TreeNode, ...args) => {
-            if (state.firstSelectedNode) {
-                state.firstSelectedNode.selected = false;
-                if (state.firstSelectedNode.nodeKey === node.nodeKey && state.firstSelectedNode.level === node.level) {
-                    state.selectedNodes = [];
-                    return;
-                }
-            }
-            node.setState('selected', true);
-            state.selectedNodes = [node];
+        const emitSelect = (node, selected) => {
+            vm.$emit('select', state.root, node, selected);
+        };
 
-            vm.$emit('select', node, ...args);
+        const onClickNode: TreeNodeEventHandler = (node, e) => {
+            vm.$emit('click-node', node, e);
+
+            if (!props.selectable) return;
+
+            if (props.disableMultiSelect) {
+                if (state.firstSelectedNode) {
+                    if (state.firstSelectedNode.nodeId === node.nodeId) {
+                        if (props.selectReleasable) {
+                            node.setSelected(false);
+                            emitSelect(node, false);
+                        }
+                    } else {
+                        state.firstSelectedNode.setSelected(false);
+                        node.setSelected(true);
+                        emitSelect(node, true);
+                    }
+                } else {
+                    node.setSelected(true);
+                    emitSelect(node, true);
+                }
+            } else {
+                // TODO: multi select case
+            }
+        };
+
+        const emitInit = () => {
+            vm.$emit('init', state.root);
+        };
+
+        const onNodeInit: TreeNodeEventHandler = (node: TreeNode, ...args) => {
+            state.initiatedNodes[node.index] = node;
+            nodeInitCount += 1;
+            if (nodeInitCount === state.nodeData?.length) {
+                emitInit();
+            }
+        };
+
+        const onNodeSelected: TreeNodeEventListeners['update-selected'] = (node) => {
+            const idx = findIndex(state.selectedNodes, { nodeId: node.nodeId });
+            if (node.selected) {
+                if (idx === -1) state.selectedNodes.push(node);
+            } else if (idx !== -1) state.selectedNodes.splice(idx, 1);
         };
 
         const nodeListeners = {
             ...vm.$listeners,
-            'toggle-click': onToggleClick,
-            'node-select': onNodeSelect,
-        };
-
-
-        const onNodeMounted = (...args) => {
-            vm.$emit('node-mounted', ...args);
+            init: onNodeInit,
+            'click-toggle': onClickToggle,
+            'click-node': onClickNode,
+            'update-selected': onNodeSelected,
         };
 
 
         onMounted(() => {
-            console.debug('nodeRefs', state.nodeRefs);
-            vm.$emit('mounted');
+            vm.$emit('mounted', state.root);
         });
+
+        watch(() => state.nodeData, (data) => {
+            state.initiatedNodes = [];
+            nodeInitCount = 0;
+        }, { immediate: true });
 
 
         const init = async () => {
-            if (props.fetcher) await fetch();
+            if (props.fetcher && props.fetchOnInit) await fetch();
         };
 
         /* init */
@@ -223,11 +311,9 @@ export default {
 
         return {
             ...toRefs(state),
-            getNodeKey,
             nodeListeners,
-            onToggleClick,
-            onNodeSelect,
-            onNodeMounted,
+            onClickToggle,
+            onClickNode,
             fetch,
         };
     },
