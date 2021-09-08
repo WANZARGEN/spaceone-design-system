@@ -172,6 +172,8 @@ export const argTypes: ArgTypes = {
     },
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export const router = new VueRouter({
     routes: [
         {

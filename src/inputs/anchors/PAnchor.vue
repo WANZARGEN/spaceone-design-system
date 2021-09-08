@@ -29,16 +29,15 @@
 </template>
 
 <script lang="ts">
-import PI from '@/foundation/icons/PI.vue';
-import { Location } from 'vue-router';
+import { RouteLocation } from 'vue-router';
 import { defineComponent } from '@vue/composition-api';
-
+import PI from '@/foundation/icons/PI.vue';
 
 interface Props {
   text?: string;
   showIcon?: boolean;
   href?: string;
-  to?: Location;
+  to?: RouteLocation;
   target?: string;
   highlight?: boolean;
 }

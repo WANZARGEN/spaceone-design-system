@@ -41,7 +41,6 @@
 <script lang="ts">
 import { defineComponent, reactive } from '@vue/composition-api';
 import PI from '@/foundation/icons/PI.vue';
-import { Location } from 'vue-router';
 
 interface Route {
     name: string;
@@ -68,13 +67,13 @@ export default defineComponent<Props>({
         const state = reactive({
             isShown: false,
         });
-        const getLocation = (route: Route): Location => {
+        const getLocation = (route: Route) => {
             if (route.to) return route.to;
             if (route.path) return { path: route.path };
             return {};
         };
         const showHidden = () => { state.isShown = true; };
-        const isLengthOverFive = idx => props.routes.length < 5 || (props.routes.length >= 5 && (idx < 1 || idx > props.routes.length - 3)) || state.isShown;
+        const isLengthOverFive = (idx) => props.routes.length < 5 || (props.routes.length >= 5 && (idx < 1 || idx > props.routes.length - 3)) || state.isShown;
 
         return {
             state,
