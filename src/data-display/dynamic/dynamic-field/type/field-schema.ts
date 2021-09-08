@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 
-
 /** Metadata schema types for Dynamic field */
 
 export const dynamicFieldTypes = ['text', 'badge', 'datetime', 'state', 'enum', 'size', 'dict', 'list'];
@@ -73,11 +72,9 @@ export interface SizeOptions extends CommonOptions {
     source_unit?: 'BYTES | KB | MB | GB | TB | PB';
 }
 
-
 export type DictOptions = CommonOptions
 
 export type TextOptions = CommonOptions
-
 
 export type DynamicFieldOptions =
     | BadgeOptions
@@ -88,7 +85,6 @@ export type DynamicFieldOptions =
     | StateOptions
     | TextOptions
     | SizeOptions
-
 
 export interface DynamicField {
     key: string;

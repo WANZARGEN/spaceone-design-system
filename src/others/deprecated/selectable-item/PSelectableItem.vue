@@ -30,11 +30,11 @@
 </template>
 
 <script lang="ts">
-import { SelectableItemPropsType } from '@/others/deprecated/selectable-item/type';
-import PLazyImg from '@/feedbacks/loading/lazy-img/PLazyImg.vue';
 import {
     computed, reactive, toRefs,
 } from '@vue/composition-api';
+import { SelectableItemPropsType } from '@/others/deprecated/selectable-item/type';
+import PLazyImg from '@/feedbacks/loading/lazy-img/PLazyImg.vue';
 import { makeByPassListeners } from '@/util/composition-helpers';
 import { themes } from '@/others/deprecated/selectable-item/config';
 

@@ -38,5 +38,4 @@ export const getTabArgTypes = (): ArgTypes => ({
     },
 });
 
-
 export { Inner };

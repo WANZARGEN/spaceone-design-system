@@ -59,7 +59,6 @@ export default {
             loading: computed(() => (props.typeOptions?.loading || false)),
         });
 
-
         return {
             ...toRefs(state),
         };

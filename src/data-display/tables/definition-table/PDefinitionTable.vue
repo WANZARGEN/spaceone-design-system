@@ -70,11 +70,10 @@ import PEmpty from '@/data-display/empty/PEmpty.vue';
 import { DefinitionProps } from '@/data-display/tables/definition-table/definition/type';
 import { DEFINITION_TABLE_STYLE_TYPE } from '@/data-display/tables/definition-table/config';
 
-const makeDefItems = (fields: DefinitionField[], data?: DefinitionData): DefinitionProps[] => fields.map(field => ({
+const makeDefItems = (fields: DefinitionField[], data?: DefinitionData): DefinitionProps[] => fields.map((field) => ({
     ...field,
     data: get(data, field.name, ''),
 }));
-
 
 export default defineComponent<DefinitionTableProps>({
     name: 'PDefinitionTable',
@@ -121,7 +120,7 @@ export default defineComponent<DefinitionTableProps>({
     setup(props: DefinitionTableProps, { emit, slots }) {
         const state = reactive({
             contextKey: Math.floor(Math.random() * Date.now()),
-            isNoData: computed(() => every(state.items, def => !def.data)),
+            isNoData: computed(() => every(state.items, (def) => !def.data)),
             skeletons: computed(() => range(props.skeletonRows ?? 5)),
             items: computed(() => makeDefItems(props.fields, props.data)),
         });

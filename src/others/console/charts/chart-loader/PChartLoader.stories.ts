@@ -18,7 +18,6 @@ export default {
     },
 };
 
-
 export const defaultCase = () => ({
     components: { PChartLoader },
     props: {

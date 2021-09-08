@@ -13,9 +13,7 @@ export const getTreeData = () => {
     return res;
 };
 
-
 export const getTreeList = () => range(faker.random.number({ min: 1, max: 10 })).map(() => getTreeData());
-
 
 export const getTreeNode = () => ({
     data: getTreeData(),

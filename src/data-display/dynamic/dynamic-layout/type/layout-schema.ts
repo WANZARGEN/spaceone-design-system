@@ -82,7 +82,6 @@ export interface DynamicLayoutOptions extends
     QuerySearchTableOptions, RawOptions, MarkdownOptions,
     RawTableOptions, HtmlOptions, ListOptions {}
 
-
 export interface DynamicLayout {
     name: string;
     type: DynamicLayoutType;

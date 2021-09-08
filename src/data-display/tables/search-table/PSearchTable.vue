@@ -33,14 +33,13 @@
 </template>
 
 <script lang="ts">
-import PToolboxTable from '@/data-display/tables/toolbox-table/PToolboxTable.vue';
 import {
     ComponentRenderProxy,
     computed, getCurrentInstance, reactive, toRefs, watch,
 } from '@vue/composition-api';
+import PToolboxTable from '@/data-display/tables/toolbox-table/PToolboxTable.vue';
 import { Options, SearchTableProps } from '@/data-display/tables/search-table/type';
 import { makeOptionalProxy } from '@/util/composition-helpers';
-
 
 export default {
     name: 'PSearchTable',

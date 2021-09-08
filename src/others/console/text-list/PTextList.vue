@@ -75,7 +75,6 @@ export default {
             return undefined;
         };
 
-
         return {
             ...toRefs(state),
             getHref,

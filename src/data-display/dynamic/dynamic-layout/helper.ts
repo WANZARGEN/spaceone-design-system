@@ -26,7 +26,6 @@ export const getValueByPath = (data: any, path: string|null) => {
         pathArr = path.split('.');
     }
 
-
     for (let i = 0; i < pathArr.length; i++) {
         if (target === undefined || target === null || typeof target !== 'object') return target;
 

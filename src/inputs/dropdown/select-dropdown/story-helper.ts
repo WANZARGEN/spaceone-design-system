@@ -151,7 +151,7 @@ export const getSelectDropdownArgTypes = (): ArgTypes => {
             name: 'buttonStyleType',
             type: { name: 'string' },
             description: `Button style. Useful when \`buttonOnly\` props is \`true\`. \n${
-                ['undefined', ...Object.values(BUTTON_STYLE)].map(d => `\`${d}\``)} are available.`,
+                ['undefined', ...Object.values(BUTTON_STYLE)].map((d) => `\`${d}\``)} are available.`,
             defaultValue: undefined,
             table: {
                 type: {

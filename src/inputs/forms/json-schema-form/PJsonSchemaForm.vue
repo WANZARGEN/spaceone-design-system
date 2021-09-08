@@ -26,7 +26,6 @@ import {
 import { makeProxy } from '@/util/composition-helpers';
 import { getFormUiSchema, getDefaultInputValue } from '@/inputs/forms/json-schema-form/helper';
 
-
 export default {
     name: 'PJsonSchemaForm',
     components: {
@@ -72,7 +71,7 @@ export default {
         const generateUiSchema = (schema: JsonSchema) => {
             const formUiSchema = getFormUiSchema(schema);
             const sortedFormUiSchema = sortBy(formUiSchema, (d: any) => d.input?.fieldOptions?.props?.label);
-            state.uiSchema = sortedFormUiSchema.map(d => ({
+            state.uiSchema = sortedFormUiSchema.map((d) => ({
                 component: 'div',
                 fieldOptions: {
                     class: 'json-schema-field-group',

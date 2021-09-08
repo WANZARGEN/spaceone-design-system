@@ -44,6 +44,10 @@
 </template>
 
 <script lang="ts">
+import {
+    computed, defineComponent, ref, watch,
+} from '@vue/composition-api';
+import { VTooltip } from 'v-tooltip';
 import PTag from '@/data-display/tags/PTag.vue';
 import PBadge from '@/data-display/badges/PBadge.vue';
 import {
@@ -51,15 +55,10 @@ import {
     QuerySearchTagsProps,
     QueryTag,
 } from '@/inputs/search/query-search-tags/type';
-import {
-    computed, defineComponent, ref, watch,
-} from '@vue/composition-api';
 import { QueryItem } from '@/inputs/search/query-search/type';
 import PI from '@/foundation/icons/PI.vue';
-import { VTooltip } from 'v-tooltip';
 import { defaultConverter, defaultValidator } from '@/inputs/search/query-search-tags/helper';
 import { i18n } from '@/translations';
-
 
 export default defineComponent({
     name: 'PQuerySearchTags',

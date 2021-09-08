@@ -1,6 +1,8 @@
-import { number, boolean, text, withKnobs } from '@storybook/addon-knobs';
-import PPageTitle from '@/data-display/titles/page-title/PPageTitle.vue';
+import {
+    number, boolean, text, withKnobs,
+} from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
+import PPageTitle from '@/data-display/titles/page-title/PPageTitle.vue';
 
 export default {
     title: 'Data Display/Titles/Page Title',

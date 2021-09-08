@@ -9,7 +9,6 @@ export default {
     },
 };
 
-
 export const widgetLayout = () => ({
     components: { PWidgetLayout },
     props: {

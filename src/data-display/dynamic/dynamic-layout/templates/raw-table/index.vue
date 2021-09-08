@@ -28,7 +28,6 @@ import {
 } from '@/data-display/dynamic/dynamic-layout/templates/raw-table/type';
 import PDynamicLayoutTable from '@/data-display/dynamic/dynamic-layout/templates/table/index.vue';
 
-
 export default {
     name: 'PDynamicLayoutRawTable',
     components: {
@@ -78,7 +77,6 @@ export default {
                 return [];
             }),
         });
-
 
         return {
             ...toRefs(state),

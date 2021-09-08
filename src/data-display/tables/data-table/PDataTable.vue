@@ -147,7 +147,6 @@ import PLottie from '@/foundation/lottie/PLottie.vue';
 import PI from '@/foundation/icons/PI.vue';
 import { DATA_TABLE_STYLE_TYPE } from '@/data-display/tables/data-table/config';
 
-
 export default defineComponent<DataTableProps>({
     name: 'PDataTable',
     components: {
@@ -277,7 +276,6 @@ export default defineComponent<DataTableProps>({
             contextKey: Math.floor(Math.random() * Date.now()),
         });
 
-
         const getValue = (item, field: DataTableFieldType) => {
             if (typeof item === 'object') {
                 return get(item, field.name);
@@ -299,7 +297,7 @@ export default defineComponent<DataTableProps>({
 
         const getSelectedState = (item, index) => {
             if (props.getRowSelectable) return props.getRowSelectable(item, index);
-            return props.multiSelect ? proxyState.selectIndex.some(d => index === d) : proxyState.selectIndex[0] === index;
+            return props.multiSelect ? proxyState.selectIndex.some((d) => index === d) : proxyState.selectIndex[0] === index;
         };
 
         const checkboxToggle = (item, index) => {
@@ -383,7 +381,6 @@ export default defineComponent<DataTableProps>({
             proxyState.selectIndex = [e];
         };
 
-
         watch(() => proxyState.selectIndex, () => {
             if (props.items && props.items.length && props.items.length === (proxyState.selectIndex as any[]).length) {
                 state.allState = true;
@@ -418,7 +415,6 @@ export default defineComponent<DataTableProps>({
         watch([() => props.items, () => props.fields], () => {
             state.contextKey = Math.floor(Math.random() * Date.now());
         });
-
 
         return {
             proxyState,

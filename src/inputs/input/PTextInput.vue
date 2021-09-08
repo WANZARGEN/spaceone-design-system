@@ -21,7 +21,7 @@ export default {
         type: {
             type: String,
             default: 'text',
-            validator: value => inputTypes.includes(value),
+            validator: (value) => inputTypes.includes(value),
         },
         block: {
             type: Boolean,

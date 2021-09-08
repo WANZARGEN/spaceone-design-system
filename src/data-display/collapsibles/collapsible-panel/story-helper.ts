@@ -2,7 +2,6 @@ import { ArgTypes } from '@storybook/addons';
 import faker from 'faker';
 import { argTypes as collapsibleArgTypes } from '@/hooks/collapsible/story-helper';
 
-
 export const argTypes: ArgTypes = {
     ...collapsibleArgTypes,
     lineClamp: {

@@ -1,6 +1,6 @@
 <template>
     <div class="p-box-tab" :class="styleType">
-        <div class="box-group" >
+        <div class="box-group">
             <button v-for="(tab, idx) in tabItems"
                     :key="tab.name"
                     :class="{ active: activeTab && activeTab === tab.name}"
@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts">
-import { TabProps, useTab } from '@/hooks/tab';
 import { defineComponent, toRefs } from '@vue/composition-api';
+import { TabProps, useTab } from '@/hooks/tab';
 import PI from '@/foundation/icons/PI.vue';
 import { BOX_TAB_STYLE_TYPE } from '@/navigation/tabs/box-tab/config';
 

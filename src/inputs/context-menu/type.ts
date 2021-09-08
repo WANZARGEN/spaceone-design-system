@@ -23,7 +23,6 @@ export const CONTEXT_MENU_THEME = {
 } as const;
 export type CONTEXT_MENU_THEME = typeof CONTEXT_MENU_THEME[keyof typeof CONTEXT_MENU_THEME];
 
-
 export interface ContextMenuProps {
     menu: MenuItem[];
     theme?: keyof typeof CONTEXT_MENU_THEME;

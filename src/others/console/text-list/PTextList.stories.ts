@@ -13,7 +13,6 @@ export default {
     decorators: [withKnobs],
 };
 
-
 export const defaultCase = () => ({
     components: { PTextList },
     props: {
@@ -48,7 +47,6 @@ export const defaultCase = () => ({
         };
     },
 });
-
 
 export const linkFormatter = () => ({
     components: { PTextList },
@@ -88,7 +86,6 @@ export const linkFormatter = () => ({
     },
 });
 
-
 export const objectArray = () => ({
     components: { PTextList },
     props: {
@@ -127,7 +124,6 @@ export const objectArray = () => ({
         };
     },
 });
-
 
 export const defaultSlot = () => ({
     components: { PTextList },

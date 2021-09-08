@@ -1,6 +1,6 @@
+import { ArgTypes } from '@storybook/addons';
 import { argTypes as selectArgTypes } from '@/hooks/select/story-helper';
 import { SELECT_BUTTON_SIZE, SELECT_BUTTON_STYLE_TYPE } from '@/inputs/select-button/config';
-import { ArgTypes } from '@storybook/addons';
 import { ANIMATION_TYPE } from '@/foundation/icons/config';
 
 const getArgTypes = (): ArgTypes => {
@@ -45,7 +45,7 @@ const getArgTypes = (): ArgTypes => {
         iconAnimation: {
             name: 'iconAnimation',
             type: { name: 'string' },
-            description: `Icon Animation type. ${Object.values(ANIMATION_TYPE).map(d => `'${d}'`)} are available.`,
+            description: `Icon Animation type. ${Object.values(ANIMATION_TYPE).map((d) => `'${d}'`)} are available.`,
             defaultValue: undefined,
             table: {
                 type: {

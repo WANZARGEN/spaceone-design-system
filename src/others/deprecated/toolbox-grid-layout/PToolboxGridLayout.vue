@@ -75,13 +75,13 @@
 
 <script lang="ts">
 import { flatMap } from 'lodash';
-import PGridLayout from '@/others/deprecated/grid-layout/PGridLayout.vue';
-import PTextPagination from '@/navigation/pagination/text-pagination/PTextPagination.vue';
-import PIconButton from '@/inputs/buttons/icon-button/PIconButton.vue';
 import {
     ComponentRenderProxy,
     computed, getCurrentInstance, reactive, toRefs,
 } from '@vue/composition-api';
+import PGridLayout from '@/others/deprecated/grid-layout/PGridLayout.vue';
+import PTextPagination from '@/navigation/pagination/text-pagination/PTextPagination.vue';
+import PIconButton from '@/inputs/buttons/icon-button/PIconButton.vue';
 import { makeOptionalProxy } from '@/util/composition-helpers';
 import PLottie from '@/foundation/lottie/PLottie.vue';
 import { ToolboxGridLayoutProps } from '@/others/deprecated/toolbox-grid-layout/type';
@@ -190,7 +190,7 @@ export default {
         });
 
         const state = reactive({
-            pageSizeOptions: computed(() => (flatMap(props.paginationValues, size => ({ type: 'item', label: size, name: size })))),
+            pageSizeOptions: computed(() => (flatMap(props.paginationValues, (size) => ({ type: 'item', label: size, name: size })))),
         });
         const changePageNumber = (page) => {
             proxyState.thisPage = page;

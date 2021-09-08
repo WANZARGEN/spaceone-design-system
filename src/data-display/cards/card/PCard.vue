@@ -16,7 +16,6 @@ import { defineComponent } from '@vue/composition-api';
 import { CARD_STYLE_TYPE } from '@/data-display/cards/card/config';
 import { CardProps } from '@/data-display/cards/card/type';
 
-
 export default defineComponent<CardProps>({
     name: 'PCard',
     props: {

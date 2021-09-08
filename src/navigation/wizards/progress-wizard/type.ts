@@ -1,11 +1,9 @@
-
 export interface ProgressTab {
     name: string;
     label?: string;
     help?: string;
     optional?: string;
 }
-
 
 export interface ProgressWizardProps {
     tabs: ProgressTab[];

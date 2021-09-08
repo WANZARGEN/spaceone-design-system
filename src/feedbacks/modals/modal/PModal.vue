@@ -12,7 +12,6 @@
 import { computed } from '@vue/composition-api';
 import { ModalProps, sizeMapping } from '@/feedbacks/modals/type';
 
-
 const setup = (props, { emit }) => {
     const dialogClassObject = computed(() => [
         { scrollable: props.scrollable },
@@ -48,7 +47,7 @@ export default {
         size: {
             type: String,
             default: 'md',
-            validator: value => Object.keys(sizeMapping).includes(value),
+            validator: (value) => Object.keys(sizeMapping).includes(value),
         },
         backdrop: {
             type: Boolean,

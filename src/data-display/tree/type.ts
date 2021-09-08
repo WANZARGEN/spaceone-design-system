@@ -57,7 +57,6 @@ export interface GetClassNames<T=any> {
     (node: TreeNode<T>): Record<string, boolean>;
 }
 
-
 export interface Tree<T=any> {
     fetchData: (node?: TreeNode<T>|null) => Promise<TreeNode<T>[]>;
     changeSelectState: (node: TreeNode<T>, path: number[], value?: boolean) => void;

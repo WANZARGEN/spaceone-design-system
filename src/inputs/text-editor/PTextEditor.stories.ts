@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
-import PTextEditor from '@/inputs/text-editor/PTextEditor.vue';
 import {
     object, select, boolean, withKnobs,
 } from '@storybook/addon-knobs';
 import {
     reactive, toRefs, watch,
 } from '@vue/composition-api';
+import PTextEditor from '@/inputs/text-editor/PTextEditor.vue';
 import { modes } from '@/inputs/text-editor/config';
 
 export default {
@@ -65,7 +65,6 @@ const value = {
         },
     ],
 };
-
 
 export const textEditor = () => ({
     components: { PTextEditor },

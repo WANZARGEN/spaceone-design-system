@@ -23,7 +23,9 @@
                 </div>
             </div>
             <slot v-if="subTitle" name="sub-title">
-                <p class="sub-title"> {{ subTitle }}</p>
+                <p class="sub-title">
+                    {{ subTitle }}
+                </p>
             </slot>
         </slot>
         <div class="widget-contents">

@@ -35,7 +35,6 @@ import {
 } from '@/inputs/buttons/icon-button/type';
 import { ANIMATION_TYPE } from '@/foundation/icons/config';
 
-
 export default defineComponent({
     name: 'PIconButton',
     components: { PLottie, PButton, PI },
@@ -47,7 +46,7 @@ export default defineComponent({
         styleType: {
             type: String,
             default: 'transparent',
-            validator: value => Object.keys(ICON_BUTTON_STYLE_TYPE).includes(value as string),
+            validator: (value) => Object.keys(ICON_BUTTON_STYLE_TYPE).includes(value as string),
         },
         color: {
             type: String,
@@ -72,7 +71,7 @@ export default defineComponent({
         size: {
             type: String,
             default: 'md',
-            validator: value => Object.keys(ICON_BUTTON_SIZE).includes(value as string),
+            validator: (value) => Object.keys(ICON_BUTTON_SIZE).includes(value as string),
         },
         animation: {
             type: String,

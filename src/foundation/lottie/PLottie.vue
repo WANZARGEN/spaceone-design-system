@@ -91,7 +91,6 @@ export default defineComponent<LottieProps>({
             stopWatch();
         });
 
-
         return {
             ...toRefs(state),
         };

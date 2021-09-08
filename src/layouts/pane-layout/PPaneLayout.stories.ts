@@ -1,6 +1,5 @@
 import PPaneLayout from '@/layouts/pane-layout/PPaneLayout.vue';
 
-
 export default {
     title: 'Layouts/Pane Layout',
     component: PPaneLayout,
@@ -11,7 +10,6 @@ export default {
         },
     },
 };
-
 
 export const paneLayout = () => ({
     components: { PPaneLayout },

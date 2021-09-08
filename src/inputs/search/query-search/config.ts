@@ -20,7 +20,6 @@ export const supportOperatorMap: Partial<Record<KeyDataType, OperatorType[]>> = 
     datetime: ['', '>', '<', '='],
 };
 
-
 /** Placeholder Map */
 export const placeholderMap: Partial<Record<KeyDataType, string>> = {
     datetime: 'YYYY-MM-DD',
@@ -31,14 +30,12 @@ export const menuTypeMap = {
     datetime: 'OPERATOR',
 };
 
-
 /** Input Validator Map */
 const datetimeRegex = RegExp(/^(\d)|[-]$/);
 
 export const inputValidatorMap: Partial<Record<KeyDataType, (value: string) => boolean>> = {
-    datetime: value => datetimeRegex.test(value),
+    datetime: (value) => datetimeRegex.test(value),
 };
-
 
 /** Default Value Handler Map */
 const booleanItems: ValueItem[] = [
@@ -74,12 +71,11 @@ export const defaultHandlerMap: Partial<Record<KeyDataType, ValueHandler>> = {
     datetime: (inputText: string) => {
         const regex = RegExp(inputText || '', 'i');
         return {
-            results: datetimeItems.filter(d => regex.test(d.name)) as ValueItem[],
+            results: datetimeItems.filter((d) => regex.test(d.name)) as ValueItem[],
             menuType: 'OPERATOR' as const,
         };
     },
 };
-
 
 /** QueryItem Formatter Map  */
 const datetimeFormatRegex = RegExp(/^(\d{4}-\d{2}-\d{2})$/);

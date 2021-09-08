@@ -73,7 +73,6 @@ export const querySearchTags = () => ({
     },
 });
 
-
 export const slotCase = () => ({
     components: { PQuerySearchTags },
     props: {

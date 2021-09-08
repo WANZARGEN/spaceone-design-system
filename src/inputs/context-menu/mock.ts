@@ -25,5 +25,4 @@ export const menuItems = [
         label: 'Hello', name: 'hello',
     },
 
-
 ];

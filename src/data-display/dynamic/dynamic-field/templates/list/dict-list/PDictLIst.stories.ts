@@ -1,13 +1,11 @@
 import { withKnobs, object } from '@storybook/addon-knobs';
 import PDictList from '@/data-display/dynamic/dynamic-field/templates/list/dict-list/PDictList.vue';
 
-
 export default {
     title: 'Data Display/Lists/Dict List',
     component: PDictList,
     decorators: [withKnobs],
 };
-
 
 export const defaultCase = () => ({
     components: { PDictList },

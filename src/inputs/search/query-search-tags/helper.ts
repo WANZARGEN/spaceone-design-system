@@ -1,12 +1,11 @@
-import { KeyDataType, QueryItem } from '@/inputs/search/query-search/type';
-import { QueryTagConverter, QueryTag, QueryTagValidator } from '@/inputs/search/query-search-tags/type';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import tz from 'dayjs/plugin/timezone';
+import { QueryTagConverter, QueryTag, QueryTagValidator } from '@/inputs/search/query-search-tags/type';
+import { KeyDataType, QueryItem } from '@/inputs/search/query-search/type';
 
 dayjs.extend(utc);
 dayjs.extend(tz);
-
 
 const trueRegex = RegExp('true', 'i');
 const falseRegex = RegExp('false', 'i');
@@ -76,7 +75,6 @@ const objectConverter = (query: QueryItem): QueryTag => {
     const res: QueryTag = { ...query };
     return res;
 };
-
 
 const converterMap: Record<KeyDataType, QueryTagConverter> = {
     boolean: booleanConverter,

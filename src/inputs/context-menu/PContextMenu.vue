@@ -83,7 +83,6 @@ import { ContextMenuProps, CONTEXT_MENU_THEME } from '@/inputs/context-menu/type
 import { i18n } from '@/translations';
 import { makeOptionalProxy } from '@/util/composition-helpers';
 
-
 export default defineComponent<ContextMenuProps>({
     name: 'PContextMenu',
     components: {
@@ -142,7 +141,7 @@ export default defineComponent<ContextMenuProps>({
         const state = reactive({
             proxySelected: makeOptionalProxy('selected', vm, props.selected),
             isAllSelected: computed(() => {
-                const filteredMenu = props.menu.filter(d => !d.disabled);
+                const filteredMenu = props.menu.filter((d) => !d.disabled);
                 return filteredMenu.length && filteredMenu.length === state.proxySelected.length;
             }),
         });
@@ -221,8 +220,8 @@ export default defineComponent<ContextMenuProps>({
             if (state.isAllSelected) {
                 state.proxySelected = [];
             } else {
-                const filteredMenu = props.menu.filter(d => !d.disabled);
-                state.proxySelected = filteredMenu.map(d => d.name);
+                const filteredMenu = props.menu.filter((d) => !d.disabled);
+                state.proxySelected = filteredMenu.map((d) => d.name);
             }
         };
 

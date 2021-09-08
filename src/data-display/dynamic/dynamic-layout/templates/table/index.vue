@@ -60,12 +60,12 @@ import {
     ComponentRenderProxy,
     computed, getCurrentInstance, reactive, toRefs,
 } from '@vue/composition-api';
+import { get } from 'lodash';
 import PPanelTop from '@/data-display/titles/panel-top/PPanelTop.vue';
 import { DynamicFieldProps } from '@/data-display/dynamic/dynamic-field/type';
 import {
     TableDynamicLayoutProps,
 } from '@/data-display/dynamic/dynamic-layout/templates/table/type';
-import { get } from 'lodash';
 import PDynamicField from '@/data-display/dynamic/dynamic-field/PDynamicField.vue';
 import { DynamicField } from '@/data-display/dynamic/dynamic-field/type/field-schema';
 import { Options } from '@/data-display/tables/query-search-table/type';
@@ -114,7 +114,7 @@ export default {
             fields: computed(() => {
                 if (!props.options.fields) return [];
 
-                return props.options.fields.map(ds => ({
+                return props.options.fields.map((ds) => ({
                     name: ds.key,
                     label: ds.name,
                     sortable: typeof ds.options?.sortable === 'boolean' ? ds.options.sortable : true,

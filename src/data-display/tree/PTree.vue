@@ -72,9 +72,9 @@ import {
     computed, defineComponent, onMounted, reactive, toRefs, watch,
 } from '@vue/composition-api';
 import { unionBy } from 'lodash';
+import { focus } from 'vue-focus';
 import PI from '@/foundation/icons/PI.vue';
 import PTextInput from '@/inputs/input/PTextInput.vue';
-import { focus } from 'vue-focus';
 import {
     TreeNode,
     Tree,
@@ -131,7 +131,7 @@ export default defineComponent<Props>({
         },
         dataGetter: {
             type: Function,
-            default: node => node.data,
+            default: (node) => node.data,
         },
         dataSetter: {
             type: Function,
@@ -161,12 +161,12 @@ export default defineComponent<Props>({
                 return undefined;
             }),
             selectedItems: [] as TreeNode[],
-            selectedPaths: computed<number[]>(() => state.selectedItems.map(d => d.path)),
+            selectedPaths: computed<number[]>(() => state.selectedItems.map((d) => d.path)),
             isFetchAndFinding: false,
             dragTargetParentPath: null as null|number[],
         });
 
-        const getSelectState = (path: number[]) => !!state.selectedPaths.find(d => d.toString() === path.toString());
+        const getSelectState = (path: number[]) => !!state.selectedPaths.find((d) => d.toString() === path.toString());
 
         const resetSelect = () => {
             state.selectedItems.forEach((d) => {
@@ -182,7 +182,7 @@ export default defineComponent<Props>({
 
             // multi select
             if (props.selectOptions.multiSelectable) {
-                const idx = state.selectedItems.findIndex(d => d.path.toString() === path.toString());
+                const idx = state.selectedItems.findIndex((d) => d.path.toString() === path.toString());
                 if (idx === -1) {
                     if (value) {
                         state.selectedItems.push({ node, path });
@@ -220,7 +220,7 @@ export default defineComponent<Props>({
             if (props.selectOptions.multiSelectable) {
                 if (!state.treeRef) return;
 
-                targetItems = unionBy(state.selectedItems, targetItems, d => d.path.toString());
+                targetItems = unionBy(state.selectedItems, targetItems, (d) => d.path.toString());
                 if (value) {
                     targetItems.forEach(({ node }) => {
                         node.$nodeBackClass = 'selected';
@@ -376,7 +376,7 @@ export default defineComponent<Props>({
         };
 
         const addNode = (data: any[]|any): void => {
-            if (Array.isArray(data)) state.treeData = state.treeData.concat(data.map(d => getDefaultNode(d)));
+            if (Array.isArray(data)) state.treeData = state.treeData.concat(data.map((d) => getDefaultNode(d)));
             else state.treeData.push(getDefaultNode(data));
         };
         const findNodePath = (predicate: Predicate, paths: number[] = [], _children?: any[]): number[] => {
@@ -418,12 +418,12 @@ export default defineComponent<Props>({
                 const predicate = predicates[i];
                 let children: TreeNode[] = node?.children || state.treeData;
 
-                let idx: number = children.findIndex(d => predicate(d.data));
+                let idx: number = children.findIndex((d) => predicate(d.data));
 
                 if (idx === -1) {
                     await fetchData(node);
                     children = node?.children || state.treeData;
-                    idx = children.findIndex(d => predicate(d.data));
+                    idx = children.findIndex((d) => predicate(d.data));
                     if (idx === -1) {
                         state.isFetchAndFinding = false;
                         return { node: null, path: [] };
@@ -506,7 +506,7 @@ export default defineComponent<Props>({
                 const parent = state.treeRef.getNodeByPath(path) as TreeNode || null;
                 if (parent) {
                     if (Array.isArray(data)) {
-                        parent.children = parent.children.concat(data.map(d => getDefaultNode(d)));
+                        parent.children = parent.children.concat(data.map((d) => getDefaultNode(d)));
                     } else {
                         parent.children = [...parent.children, getDefaultNode(data)];
                     }
@@ -534,7 +534,6 @@ export default defineComponent<Props>({
             if (after.toString() === before.toString()) return;
             emit('change-select', state.selectedItems);
         });
-
 
         /* Init */
         const root: Tree = {
@@ -583,7 +582,6 @@ export default defineComponent<Props>({
                 emit('init', root);
             })();
         });
-
 
         return {
             ...toRefs(state),

@@ -1,9 +1,8 @@
+import { find } from 'lodash';
 import {
     HandlerResponse,
     KeyItem, KeyItemSet, KeyMenuItem, OperatorType, ValueHandler, ValueItem, ValueMenuItem,
 } from '@/inputs/search/query-search/type';
-import { find } from 'lodash';
-
 
 export const getRootKeyItemHandler = (keyItemSets: KeyItemSet[]): ValueHandler => (val: string) => {
     const results: KeyMenuItem[] = [];
@@ -15,7 +14,7 @@ export const getRootKeyItemHandler = (keyItemSets: KeyItemSet[]): ValueHandler =
         let items: KeyItem[];
         totalCount += set.items.length;
 
-        if (regex) items = set.items.filter(d => regex.test(d.label));
+        if (regex) items = set.items.filter((d) => regex.test(d.label));
         else items = set.items;
 
         if (items.length > 0) {
@@ -24,7 +23,7 @@ export const getRootKeyItemHandler = (keyItemSets: KeyItemSet[]): ValueHandler =
                 name: set.title,
                 type: 'header',
             },
-            ...items.map(k => ({
+            ...items.map((k) => ({
                 ...k,
                 type: 'item' as const,
                 data: k,
@@ -38,7 +37,6 @@ export const getRootKeyItemHandler = (keyItemSets: KeyItemSet[]): ValueHandler =
     };
 };
 
-
 export const getKeyMenuForm = (resp: HandlerResponse, selectedKeys: KeyItem[], subPath?: string): KeyMenuItem[] => {
     let key = 'Key';
     if (selectedKeys[0]) {
@@ -51,7 +49,7 @@ export const getKeyMenuForm = (resp: HandlerResponse, selectedKeys: KeyItem[], s
             name: key,
             type: 'header',
         },
-        ...resp.results.map(d => ({
+        ...resp.results.map((d) => ({
             label: d.label,
             name: d.name,
             type: (d as ValueMenuItem).type || 'item' as const,
@@ -72,7 +70,7 @@ export const getValueMenuForm = (resp: HandlerResponse, selectedKeys: KeyItem[],
             name: key,
             type: 'header',
         },
-        ...resp.results.map(d => ({
+        ...resp.results.map((d) => ({
             label: `${key}:${operator} ${d.label}`,
             name: d.name,
             type: 'item' as const,
@@ -81,7 +79,7 @@ export const getValueMenuForm = (resp: HandlerResponse, selectedKeys: KeyItem[],
     ];
 };
 
-export const getOperatorMenuForm = (items: ValueItem[], operator: OperatorType): ValueMenuItem[] => items.map(d => ({ ...d, type: 'item', data: d }));
+export const getOperatorMenuForm = (items: ValueItem[], operator: OperatorType): ValueMenuItem[] => items.map((d) => ({ ...d, type: 'item', data: d }));
 
 export const findKey = (val: string, items: KeyItem[]): KeyItem|undefined => {
     const value = val.toLowerCase();

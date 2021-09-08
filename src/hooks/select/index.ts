@@ -21,7 +21,7 @@ const getSelectState = (props: SelectProps) => {
             if (Array.isArray(props.selected)) {
                 if (props.predicate) {
                     const predicate = props.predicate;
-                    return !!props.selected.find(d => predicate(props.value, d));
+                    return !!props.selected.find((d) => predicate(props.value, d));
                 }
                 return props.selected.includes(props.value);
             }
@@ -46,7 +46,7 @@ export const useMultiSelect = (props: SelectProps, context: SetupContext,
             if (!state.isSelected) newResult.push(props.value);
             else if (props.predicate) {
                 const predicate = props.predicate;
-                remove(newResult, d => predicate(props.value, d));
+                remove(newResult, (d) => predicate(props.value, d));
             } else pull(newResult, props.value);
         } else if (typeof props.selected === 'boolean') {
             newResult = !props.selected;
@@ -62,7 +62,6 @@ export const useMultiSelect = (props: SelectProps, context: SetupContext,
         onClick,
     };
 };
-
 
 export const useSingleSelect = (props: SelectProps, context: SetupContext,
     state: SelectState = getSelectState(props)) => {
@@ -87,7 +86,6 @@ export const useSingleSelect = (props: SelectProps, context: SetupContext,
         onClick,
     };
 };
-
 
 export const useSelect = (props: SelectProps, context: SetupContext) => {
     const state = getSelectState(props);

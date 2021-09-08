@@ -10,7 +10,7 @@ import {
  */
 export const makeByPassListeners = (listeners: Record<string, Function | Function[]>, name: string, ...args: any[]) => {
     // @ts-ignore
-    if (Array.isArray(listeners[name])) listeners[name].forEach(f => f(...args));
+    if (Array.isArray(listeners[name])) listeners[name].forEach((f) => f(...args));
     // @ts-ignore
     else if (typeof listeners[name] === 'function') listeners[name](...args);
 };
@@ -24,7 +24,6 @@ export const makeByPassListeners = (listeners: Record<string, Function | Functio
 export const makeByEvent = (emit: any, name: string) => (...event: any) => {
     emit(name, ...event);
 };
-
 
 /**
  * make proxy computed that same name as props
@@ -57,7 +56,7 @@ export function makeOptionalProxy <T=any>(name: string, vm, initData: any, event
             if (vm.$listeners[`update:${name}`]) {
                 vm.$emit(`update:${name}`, val);
             } else currentVal.value = val;
-            if (Array.isArray(events)) events.forEach(d => vm.$emit(d, val));
+            if (Array.isArray(events)) events.forEach((d) => vm.$emit(d, val));
         },
         get() {
             if (vm.$listeners[`update:${name}`]) return vm.$props[name];

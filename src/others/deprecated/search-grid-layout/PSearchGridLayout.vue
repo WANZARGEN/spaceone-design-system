@@ -49,13 +49,13 @@
 </template>
 
 <script lang="ts">
-import PQuerySearch from '@/inputs/search/query-search/PQuerySearch.vue';
-import PQuerySearchTags from '@/inputs/search/query-search-tags/PQuerySearchTags.vue';
 import {
     ComponentRenderProxy,
     computed, getCurrentInstance, reactive, toRefs, watch,
 } from '@vue/composition-api';
 import { forEach } from 'lodash';
+import PQuerySearch from '@/inputs/search/query-search/PQuerySearch.vue';
+import PQuerySearchTags from '@/inputs/search/query-search-tags/PQuerySearchTags.vue';
 import { QueryItem } from '@/inputs/search/query-search/type';
 import {
     QuerySearchTagsFunctions,

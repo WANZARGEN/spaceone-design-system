@@ -1,6 +1,5 @@
 import { QueryItem } from '@/inputs/search/query-search/type';
 
-
 export interface QueryTag extends QueryItem {
     invalid?: boolean;
     description?: string;
@@ -21,7 +20,6 @@ export interface QuerySearchTagsProps {
     converter?: QueryTagConverter;
     readOnly: boolean;
 }
-
 
 export interface QuerySearchTagsFunctions {
     addTag(...queries: QueryItem[]): void;

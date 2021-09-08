@@ -11,7 +11,6 @@ export default {
 
 const imgUrl = 'https://lh3.googleusercontent.com/proxy/1mxA2dMQk7sYbPjbfVcX8PQ_14UFPDkzixnN52vQMT1zSmxyrzNUNedzEqiIStNU9y8Oev1UQPiq6JjkWlKlSy7GU10jM9ekYfFyETDbHZTJDDhjK84xGPorLN_2E3hdO3Ac';
 
-
 export const defaultCase = () => ({
     components: { PSelectableItem },
     props: {

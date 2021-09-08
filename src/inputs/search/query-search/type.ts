@@ -1,9 +1,7 @@
 import { CONTEXT_MENU_TYPE } from '@/inputs/context-menu/type';
 
-
 export const dataTypes = ['string', 'integer', 'float', 'boolean', 'datetime', 'object'] as const;
 export type KeyDataType = typeof dataTypes[number];
-
 
 export const operators = ['', '!', '>', '>=', '<', '<=', '=', '!=', '$'] as const;
 export type OperatorType = typeof operators[number];
@@ -50,7 +48,6 @@ export interface ValueHandler {
      operator?: OperatorType): Promise<HandlerResponse>|HandlerResponse;
 }
 
-
 export interface ValueHandlerMap {
     [key: string]: ValueHandler|undefined;
 }
@@ -59,7 +56,6 @@ export interface KeyItemSet {
     title: string;
     items: KeyItem[];
 }
-
 
 export interface QuerySearchProps {
     placeholder?: string;

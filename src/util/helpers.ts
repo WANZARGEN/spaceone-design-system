@@ -23,7 +23,6 @@ export const copyAnyData = (value) => {
     } else copyTextToClipboard(value.trim() || '');
 };
 
-
 /** @function
  * @name isNotEmpty
  * @param value

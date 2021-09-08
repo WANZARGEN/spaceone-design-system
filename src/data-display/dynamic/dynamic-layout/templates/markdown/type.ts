@@ -3,5 +3,4 @@ import {
     DynamicLayoutProps,
 } from '@/data-display/dynamic/dynamic-layout/type';
 
-
 export type MarkdownDynamicLayoutProps = DynamicLayoutProps<MarkdownOptions>

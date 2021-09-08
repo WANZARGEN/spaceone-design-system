@@ -87,7 +87,7 @@ export default {
                         const subKey = (d.options as ListOptions)?.sub_key as string;
                         const matchedData = get(state.rootData, d.key);
                         if (Array.isArray(matchedData)) {
-                            res.disableCopy = matchedData.some(data => !get(data, subKey));
+                            res.disableCopy = matchedData.some((data) => !get(data, subKey));
                         } else {
                             res.disableCopy = !get(matchedData, subKey);
                         }

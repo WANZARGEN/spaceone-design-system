@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
-import PJsonSchemaForm from '@/inputs/forms/json-schema-form/PJsonSchemaForm.vue';
-import PButton from '@/inputs/buttons/button/PButton.vue';
 import {
     toRefs, reactive,
 } from '@vue/composition-api';
+import PJsonSchemaForm from '@/inputs/forms/json-schema-form/PJsonSchemaForm.vue';
+import PButton from '@/inputs/buttons/button/PButton.vue';
 
 export default {
     title: 'Inputs/Forms/Json Schema Form',

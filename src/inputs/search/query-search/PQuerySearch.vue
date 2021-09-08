@@ -104,7 +104,6 @@ import {
     getValueMenuForm,
 } from '@/inputs/search/query-search/helper';
 
-
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -161,7 +160,7 @@ export default defineComponent({
 
             /* Query */
             selectedKeys: [] as KeyItem[],
-            subPath: computed<string|undefined>(() => state.selectedKeys.slice(1).map(d => d.name).join('.') || undefined),
+            subPath: computed<string|undefined>(() => state.selectedKeys.slice(1).map((d) => d.name).join('.') || undefined),
             selectedKey: computed<KeyItem|null>(() => state.selectedKeys[state.selectedKeys.length - 1] || null),
             rootKey: computed<KeyItem|null>(() => state.selectedKeys[0] || null),
             operator: '' as OperatorType,
@@ -192,7 +191,6 @@ export default defineComponent({
                     || null;
             }),
             handlerResp: { results: [] } as HandlerResponse,
-
 
             /* help */
             visibleSearchGuide: false,
@@ -233,7 +231,6 @@ export default defineComponent({
             state.operator = '';
         };
 
-
         const updateSelectedKey = (item: KeyItem|null, replace = false) => {
             if (replace) {
                 if (item) state.selectedKeys = [item];
@@ -246,7 +243,7 @@ export default defineComponent({
             if (state.menuType === 'ROOT_KEY') state.menu = res.results;
             else if (state.menuType === 'KEY') state.menu = getKeyMenuForm(res, state.selectedKeys, state.subPath);
             else if (state.menuType === 'VALUE') state.menu = getValueMenuForm(res, state.selectedKeys, state.operator, state.subPath);
-            else state.menu = res.results.map(d => ({ ...d, type: 'item', data: d }));
+            else state.menu = res.results.map((d) => ({ ...d, type: 'item', data: d }));
         };
 
         const updateLoader = debounce(() => {
@@ -281,7 +278,6 @@ export default defineComponent({
             updateLoading(false, true);
         }, 150);
 
-
         const updateOperator = (operator?: OperatorType) => {
             if (operator === undefined) {
                 if (state.operator.length === 2) state.operator = state.operator.substring(0, 1) as OperatorType;
@@ -290,7 +286,6 @@ export default defineComponent({
                 state.operator = operator;
             }
         };
-
 
         const findAndSetKey = async (val: string, isRootKey = true) => {
             let item = findKey(val, state.handlerResp.results) || null;
@@ -330,7 +325,6 @@ export default defineComponent({
                 hideMenu();
             }
         };
-
 
         /* Event handlers */
         const onInput = async (e) => {
@@ -387,7 +381,7 @@ export default defineComponent({
             /* check operator */
             if (state.searchText.length === 0) {
                 const op = state.operator + e.key;
-                if (state.supportOperators.some(d => d.startsWith(op))) {
+                if (state.supportOperators.some((d) => d.startsWith(op))) {
                     e.preventDefault();
                     updateOperator(op as OperatorType);
                     await updateMenuItems(state.searchText);
@@ -404,9 +398,8 @@ export default defineComponent({
             }
         };
 
-
         const getKeyItemsFromKeyText = (keyStr: string): KeyItem[] => {
-            const allKeyItems = props.keyItemSets.map(d => d.items).flat();
+            const allKeyItems = props.keyItemSets.map((d) => d.items).flat();
             const dotIdx = keyStr.indexOf('.');
             let keyItems: KeyItem[] = [];
 
@@ -476,7 +469,6 @@ export default defineComponent({
             }
         };
 
-
         /* Help */
         const onHelpClick = () => {
             state.visibleSearchGuide = true;
@@ -498,7 +490,6 @@ export default defineComponent({
             window.removeEventListener('blur', hideMenu);
             window.removeEventListener('keydown', onWindowKeydown, false);
         });
-
 
         /* Slots */
         const menuSlots = computed(() => reduce(slots, (res, d, name) => {

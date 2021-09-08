@@ -29,13 +29,13 @@ const getTabState = (props: TabProps) => {
         })),
         nonKeepTabNames: computed<string[]>(() => {
             if (props.keepAliveAll) return [];
-            return state.tabItems.filter(tab => !tab.keepAlive).map(tab => tab.name);
+            return state.tabItems.filter((tab) => !tab.keepAlive).map((tab) => tab.name);
         }),
         keepTabNames: computed<string[]>(() => {
-            const tabs = props.keepAliveAll ? state.tabItems : state.tabItems.filter(tab => tab.keepAlive);
-            return tabs.map(tab => tab.name);
+            const tabs = props.keepAliveAll ? state.tabItems : state.tabItems.filter((tab) => tab.keepAlive);
+            return tabs.map((tab) => tab.name);
         }),
-        currentTabItem: computed<Required<TabItem>|undefined>(() => state.tabItems.find(tab => tab.name === state.proxyActiveTab)),
+        currentTabItem: computed<Required<TabItem>|undefined>(() => state.tabItems.find((tab) => tab.name === state.proxyActiveTab)),
     });
     return state;
 };

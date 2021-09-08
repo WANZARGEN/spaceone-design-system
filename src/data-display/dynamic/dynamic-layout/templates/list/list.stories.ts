@@ -16,7 +16,6 @@ export default {
     },
 };
 
-
 export const defaultCase = () => ({
     components: { PDynamicLayout },
     props: {

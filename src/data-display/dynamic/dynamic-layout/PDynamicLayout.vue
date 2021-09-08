@@ -20,11 +20,10 @@
 import {
     computed, onMounted, reactive, toRefs, watch,
 } from '@vue/composition-api';
-import PSkeleton from '@/feedbacks/loading/skeleton/PSkeleton.vue';
 import { isEqual } from 'lodash';
+import PSkeleton from '@/feedbacks/loading/skeleton/PSkeleton.vue';
 import { DynamicLayoutProps } from '@/data-display/dynamic/dynamic-layout/type';
 import { dynamicLayoutTypes } from '@/data-display/dynamic/dynamic-layout/type/layout-schema';
-
 
 export default {
     name: 'PDynamicLayout',

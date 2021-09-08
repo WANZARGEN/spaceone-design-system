@@ -122,7 +122,7 @@ export default defineComponent<Props>({
                 return;
             }
 
-            const foundIdx = state.proxyUnfoldedIndices.findIndex(d => d === idx);
+            const foundIdx = state.proxyUnfoldedIndices.findIndex((d) => d === idx);
             if (isCollapsed) {
                 if (foundIdx !== -1) {
                     const newIndices = [...state.proxyUnfoldedIndices];

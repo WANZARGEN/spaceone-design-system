@@ -1,4 +1,3 @@
-
 export const getAllPage = (
     totalCount?: number,
     pageSize?: number,

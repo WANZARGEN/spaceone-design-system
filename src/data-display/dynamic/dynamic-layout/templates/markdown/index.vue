@@ -16,13 +16,12 @@ import {
     computed, getCurrentInstance,
     reactive, toRefs,
 } from '@vue/composition-api';
+import { get } from 'lodash';
 import PPanelTop from '@/data-display/titles/panel-top/PPanelTop.vue';
 import PMarkdown from '@/data-display/markdown/PMarkdown.vue';
-import { get } from 'lodash';
 import {
     MarkdownDynamicLayoutProps,
 } from '@/data-display/dynamic/dynamic-layout/templates/markdown/type';
-
 
 export default {
     name: 'PDynamicLayoutMarkdown',

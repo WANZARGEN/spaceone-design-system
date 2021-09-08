@@ -1,7 +1,7 @@
 import { number, withKnobs } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
-import PPagination from '@/navigation/pagination/pagination/PPagination.vue';
 import { reactive, toRefs } from '@vue/composition-api';
+import PPagination from '@/navigation/pagination/pagination/PPagination.vue';
 
 export default {
     title: 'Navigation/Pagination',

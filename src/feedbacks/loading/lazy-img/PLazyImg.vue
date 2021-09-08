@@ -92,7 +92,6 @@ export default defineComponent<Props>({
             status: LOAD_STATUS.loading,
         });
 
-
         watch(() => props.src, (src, before) => {
             if (!src && src === before) {
                 state.status = LOAD_STATUS.errored;

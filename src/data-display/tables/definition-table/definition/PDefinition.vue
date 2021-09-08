@@ -76,7 +76,6 @@ export default defineComponent<DefinitionProps>({
             displayData: computed(() => (props.formatter ? props.formatter(props.data, props) : props.data)),
         });
 
-
         return {
             ...toRefs(state),
         };

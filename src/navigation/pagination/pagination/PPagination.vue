@@ -25,11 +25,11 @@
     </nav>
 </template>
 <script lang="ts">
-import PIconButton from '@/inputs/buttons/icon-button/PIconButton.vue';
 import {
     ComponentRenderProxy,
     computed, getCurrentInstance, reactive, toRefs,
 } from '@vue/composition-api';
+import PIconButton from '@/inputs/buttons/icon-button/PIconButton.vue';
 import { makeOptionalProxy } from '@/util/composition-helpers';
 
 export default {
@@ -114,7 +114,7 @@ export default {
             const endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
 
             // create an array of pages to ng-repeat in the pager control
-            const pages = Array.from(Array((endPage + 1) - startPage).keys()).map(i => startPage + i);
+            const pages = Array.from(Array((endPage + 1) - startPage).keys()).map((i) => startPage + i);
 
             // return object with all pager properties required by the view
             return {

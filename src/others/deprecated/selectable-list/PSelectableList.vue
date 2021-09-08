@@ -51,7 +51,6 @@ import { makeOptionalProxy, makeProxy } from '@/util/composition-helpers';
 import PEmpty from '@/data-display/empty/PEmpty.vue';
 import { themes } from '@/others/deprecated/selectable-item/config';
 
-
 export default {
     name: 'PSelectableList',
     components: { PEmpty, PSelectableItem, PLottie },

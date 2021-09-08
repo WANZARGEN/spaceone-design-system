@@ -30,7 +30,6 @@ import {
     SelectProps, useSelect,
 } from '@/hooks/select';
 
-
 interface Props extends SelectProps {
     block?: boolean;
     imageUrl?: string;
@@ -113,7 +112,6 @@ export default defineComponent<Props>({
                 return '';
             }),
         });
-
 
         return {
             ...toRefs(selectState),

@@ -1,8 +1,8 @@
-import PHorizontalLayout from '@/layouts/horizontal-layout/PHorizontalLayout.vue';
 import { action } from '@storybook/addon-actions';
 import {
     number, boolean, text, withKnobs,
 } from '@storybook/addon-knobs';
+import PHorizontalLayout from '@/layouts/horizontal-layout/PHorizontalLayout.vue';
 import PIconButton from '@/inputs/buttons/icon-button/PIconButton.vue';
 
 export default {

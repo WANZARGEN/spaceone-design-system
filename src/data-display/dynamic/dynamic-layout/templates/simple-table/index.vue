@@ -43,7 +43,6 @@ import {
 import { DynamicField } from '@/data-display/dynamic/dynamic-field/type/field-schema';
 import { getValueByPath } from '@/data-display/dynamic/dynamic-layout/helper';
 
-
 export default {
     name: 'PDynamicLayoutSimpleTable',
     components: {
@@ -88,7 +87,7 @@ export default {
             fields: computed(() => {
                 if (!props.options.fields) return [];
 
-                return props.options.fields.map(ds => ({
+                return props.options.fields.map((ds) => ({
                     name: ds.key,
                     label: ds.name,
                     sortable: typeof ds.options?.sortable === 'boolean' ? ds.options.sortable : true,

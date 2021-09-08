@@ -80,7 +80,6 @@ import { TOOLBOX_TABLE_STYLE_TYPE } from '@/data-display/tables/toolbox-table/co
 import { ToolboxOptions } from '@/navigation/toolbox/type';
 import { ToolboxTableOptions, ToolboxTableProps } from '@/data-display/tables/toolbox-table/type';
 
-
 export default defineComponent<ToolboxTableProps>({
     name: 'PToolboxTable',
     components: {
@@ -265,7 +264,6 @@ export default defineComponent<ToolboxTableProps>({
             queryTags: makeOptionalProxy<number>('queryTags', vm, []),
             searchText: makeOptionalProxy<number>('searchText', vm, ''),
         });
-
 
         const emitChange = (options: ToolboxTableOptions) => {
             emit('change', options);

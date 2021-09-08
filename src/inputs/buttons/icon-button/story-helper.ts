@@ -3,7 +3,6 @@ import icon from 'vue-svgicon';
 import { ANIMATION_TYPE } from '@/foundation/icons/config';
 import { ICON_BUTTON_SHAPE, ICON_BUTTON_STYLE_TYPE } from '@/inputs/buttons/icon-button/type';
 
-
 export const getIconButtonArgTypes = (): ArgTypes => ({
     name: {
         name: 'name',
@@ -155,7 +154,7 @@ export const getIconButtonArgTypes = (): ArgTypes => ({
     animation: {
         name: 'animation',
         type: { name: 'string' },
-        description: `Animation type. ${Object.values(ANIMATION_TYPE).map(d => `'${d}'`)} are available.`,
+        description: `Animation type. ${Object.values(ANIMATION_TYPE).map((d) => `'${d}'`)} are available.`,
         defaultValue: undefined,
         table: {
             type: {

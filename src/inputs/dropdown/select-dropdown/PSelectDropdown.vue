@@ -81,7 +81,6 @@ import { makeOptionalProxy } from '@/util/composition-helpers';
 import PIconButton from '@/inputs/buttons/icon-button/PIconButton.vue';
 import PI from '@/foundation/icons/PI.vue';
 
-
 interface SelectDropdownProps extends ContextMenuFixedStyleProps {
     items?: MenuItem[];
     selected?: string | number;
@@ -205,7 +204,6 @@ export default defineComponent<SelectDropdownProps>({
                 return res;
             }, {})),
         });
-
 
         /* Event Handlers */
         const onSelectMenu = (value, index) => {

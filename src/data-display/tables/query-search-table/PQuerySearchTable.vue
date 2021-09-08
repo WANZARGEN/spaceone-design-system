@@ -34,11 +34,11 @@
 </template>
 
 <script lang="ts">
-import PToolboxTable from '@/data-display/tables/toolbox-table/PToolboxTable.vue';
 import {
     ComponentRenderProxy,
     getCurrentInstance, reactive,
 } from '@vue/composition-api';
+import PToolboxTable from '@/data-display/tables/toolbox-table/PToolboxTable.vue';
 import {
     QueryTag,
 } from '@/inputs/search/query-search-tags/type';
@@ -143,7 +143,6 @@ export default {
             pageSize: makeOptionalProxy<number>('pageSize', vm, 15),
             queryTags: makeOptionalProxy<QueryTag[]>('queryTags', vm, []),
         });
-
 
         /** Event emitter */
         const emitSelect = (selectIndex) => {

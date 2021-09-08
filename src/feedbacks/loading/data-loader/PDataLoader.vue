@@ -21,7 +21,6 @@
                 </slot>
             </div>
 
-
             <div v-else key="data" class="data-wrapper">
                 <slot />
             </div>
@@ -33,10 +32,10 @@
 import {
     computed, defineComponent, reactive, toRefs, watch,
 } from '@vue/composition-api';
+import { isEmpty } from 'lodash';
 import { LOADER_TYPES } from '@/feedbacks/loading/data-loader/config';
 import PLottie from '@/foundation/lottie/PLottie.vue';
 import { i18n } from '@/translations';
-import { isEmpty } from 'lodash';
 import PSkeleton from '@/feedbacks/loading/skeleton/PSkeleton.vue';
 
 interface Props {
@@ -114,7 +113,6 @@ export default defineComponent({
                         state.minTimeLoading = false;
                     }, props.minLoadingTime);
                 }
-
 
                 if (props.lazyLoadingTime) {
                     state.lazyLoading = false;

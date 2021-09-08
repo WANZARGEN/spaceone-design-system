@@ -21,7 +21,6 @@ export interface JsonSchema<T extends JsonSchemaType=JsonSchemaType> {
     required?: string[];
 }
 
-
 export const StringProperty = (label: string, required?, placeholder?: string, extra?: any): JsonSchema<'string'> => {
     const result: any = {
         type: 'string',
@@ -38,7 +37,6 @@ export const StringProperty = (label: string, required?, placeholder?: string, e
         ...extra,
     };
 };
-
 
 export const IntegerProperty = (label: string, required?, placeholder?: string, extra?: any): JsonSchema<'integer'> => {
     const result: any = {

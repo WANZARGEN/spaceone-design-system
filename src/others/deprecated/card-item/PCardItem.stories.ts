@@ -8,7 +8,6 @@ export default {
     decorators: [withKnobs],
 };
 
-
 export const defaultCase = () => ({
     components: { PCardItem },
     props: {

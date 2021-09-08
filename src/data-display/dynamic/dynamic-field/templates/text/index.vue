@@ -1,9 +1,9 @@
 <script lang="ts">
+import { ComponentRenderProxy, getCurrentInstance } from '@vue/composition-api';
+import { TranslateResult } from 'vue-i18n';
 import PAnchor from '@/inputs/anchors/PAnchor.vue';
 import { TextOptions } from '@/data-display/dynamic/dynamic-field/type/field-schema';
 import { TextDynamicFieldProps } from '@/data-display/dynamic/dynamic-field/templates/text/type';
-import { ComponentRenderProxy, getCurrentInstance } from '@vue/composition-api';
-import { TranslateResult } from 'vue-i18n';
 
 export default {
     name: 'PDynamicFieldText',

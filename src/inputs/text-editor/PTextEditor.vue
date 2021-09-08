@@ -20,7 +20,6 @@
     </div>
 </template>
 
-
 <script lang="ts">
 /**
   * Used library: codemirror
@@ -49,7 +48,6 @@ require('codemirror/addon/fold/xml-fold');
 require('codemirror/addon/lint/json-lint');
 require('codemirror/addon/edit/closebrackets');
 require('codemirror/addon/edit/closetag');
-
 
 export default {
     name: 'PTextEditor',
@@ -165,7 +163,6 @@ export default {
             refresh();
         };
 
-
         watch(() => state.textarea, async (after, before) => {
             if (after) {
                 await init();
@@ -174,11 +171,9 @@ export default {
             }
         });
 
-
         onBeforeUnmount(() => {
             destroy(state.cminstance);
         });
-
 
         return {
             ...toRefs(state),

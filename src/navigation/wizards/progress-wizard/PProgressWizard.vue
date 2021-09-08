@@ -117,6 +117,7 @@
 import {
     toRefs, reactive, computed,
 } from '@vue/composition-api';
+import { size } from 'lodash';
 import { makeProxy } from '@/util/composition-helpers';
 
 import PPaneLayout from '@/layouts/pane-layout/PPaneLayout.vue';
@@ -125,9 +126,7 @@ import PButton from '@/inputs/buttons/button/PButton.vue';
 import {
     ProgressWizardProps,
 } from '@/navigation/wizards/progress-wizard/type';
-import { size } from 'lodash';
 import PTooltipButton from '@/others/deprecated/tooltip-button/PTooltipButton.vue';
-
 
 export default {
     name: 'PProgressWizard',

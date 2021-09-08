@@ -48,7 +48,6 @@ import PTextInput from '@/inputs/input/PTextInput.vue';
 import PFieldGroup from '@/inputs/forms/field-group/PFieldGroup.vue';
 import { sizeMapping } from '@/feedbacks/modals/type';
 
-
 export default {
     name: 'PDoubleCheckModal',
     components: { PButtonModal, PTextInput, PFieldGroup },
@@ -64,7 +63,7 @@ export default {
         size: {
             type: String,
             default: 'md',
-            validator: value => Object.keys(sizeMapping).includes(value),
+            validator: (value) => Object.keys(sizeMapping).includes(value),
         },
         backdrop: {
             type: Boolean,
@@ -115,7 +114,6 @@ export default {
             }
         };
 
-
         return {
             ...toRefs(state),
             ...toRefs(checkState),
@@ -124,7 +122,6 @@ export default {
             confirm,
         };
     },
-
 
 };
 </script>

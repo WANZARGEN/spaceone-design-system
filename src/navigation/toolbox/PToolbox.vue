@@ -71,11 +71,11 @@
 </template>
 
 <script lang="ts">
-import PIconButton from '@/inputs/buttons/icon-button/PIconButton.vue';
-import PTextPagination from '@/navigation/pagination/text-pagination/PTextPagination.vue';
 import {
     ComponentRenderProxy, computed, defineComponent, getCurrentInstance, reactive, toRefs,
 } from '@vue/composition-api';
+import PIconButton from '@/inputs/buttons/icon-button/PIconButton.vue';
+import PTextPagination from '@/navigation/pagination/text-pagination/PTextPagination.vue';
 import { makeOptionalProxy } from '@/util/composition-helpers';
 import PQuerySearch from '@/inputs/search/query-search/PQuerySearch.vue';
 import { QueryTag } from '@/inputs/search/query-search-tags/type';
@@ -85,7 +85,6 @@ import PQuerySearchTags from '@/inputs/search/query-search-tags/PQuerySearchTags
 import { SEARCH_TYPES } from '@/navigation/toolbox/config';
 import { ToolboxOptions, ToolboxProps } from '@/navigation/toolbox/type';
 import PSelectDropdown from '@/inputs/dropdown/select-dropdown/PSelectDropdown.vue';
-
 
 export default defineComponent<ToolboxProps>({
     name: 'PToolbox',
@@ -202,19 +201,18 @@ export default defineComponent<ToolboxProps>({
             allPage: computed(() => Math.ceil((props.totalCount || 0) / proxyState.pageSize) || 1),
             pageMenu: computed(() => {
                 if (!Array.isArray(props.pageSizeOptions)) return [];
-                return props.pageSizeOptions.map(d => ({
+                return props.pageSizeOptions.map((d) => ({
                     name: d, label: d, type: 'item',
                 }));
             }),
             sortByMenu: computed(() => {
                 if (!Array.isArray(props.sortByOptions)) return [];
-                return props.sortByOptions.map(d => ({
+                return props.sortByOptions.map((d) => ({
                     name: d, label: d, type: 'item',
                 }));
             }),
             tagRef: null as any,
         });
-
 
         const emitChange = (options: ToolboxOptions) => {
             vm.$emit('change', options);

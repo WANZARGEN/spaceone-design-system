@@ -6,5 +6,4 @@ import {
 
 export type ItemFetchOptions = Pick<DynamicLayoutFetchOptions, never>;
 
-
 export type ItemDynamicLayoutProps = DynamicLayoutProps<ItemOptions>

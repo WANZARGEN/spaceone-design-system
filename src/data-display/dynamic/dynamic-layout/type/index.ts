@@ -7,7 +7,6 @@ import {
 } from '@/data-display/dynamic/dynamic-field/type';
 import { DynamicField, DynamicFieldOptions } from '@/data-display/dynamic/dynamic-field/type/field-schema';
 
-
 export interface DynamicLayoutFetchOptions {
     sortBy?: string;
     sortDesc?: boolean;
@@ -55,7 +54,6 @@ export type DynamicLayoutFieldHandler<T = undefined> = DynamicFieldHandler<
     DynamicFieldTypeOptions,
     DynamicLayoutFieldExtraData & T
     >
-
 
 export interface DynamicLayoutEventListener {
     fetch: (options: DynamicLayoutFetchOptions, layoutName?: string, layoutIndex?: number) => void|Promise<void>;

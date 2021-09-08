@@ -56,7 +56,7 @@ export default defineComponent({
         styleType: {
             type: String,
             default: SIDEBAR_STYLE_TYPE.primary,
-            validator: value => Object.keys(SIDEBAR_STYLE_TYPE).includes(value as string),
+            validator: (value) => Object.keys(SIDEBAR_STYLE_TYPE).includes(value as string),
         },
     },
     setup(props, { emit, listeners }) {

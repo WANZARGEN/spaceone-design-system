@@ -87,9 +87,9 @@
 </template>
 
 <script lang="ts">
+import { reactive, toRefs } from '@vue/composition-api';
 import PButtonModal from '@/feedbacks/modals/button-modal/PButtonModal.vue';
 import PI from '@/foundation/icons/PI.vue';
-import { reactive, toRefs } from '@vue/composition-api';
 import { makeProxy } from '@/util/composition-helpers';
 import PAnchor from '@/inputs/anchors/PAnchor.vue';
 

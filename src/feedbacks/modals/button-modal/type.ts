@@ -8,7 +8,6 @@ export enum sizeMapping {
 }
 export type ModalSizeType = keyof typeof sizeMapping;
 
-
 export const THEME_COLORS = [
     'primary',
     'primary-dark',

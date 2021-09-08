@@ -12,8 +12,8 @@
 </template>
 
 <script lang="ts">
-import { SelectProps, useSelect } from '@/hooks/select';
 import { computed, defineComponent, toRefs } from '@vue/composition-api';
+import { SelectProps, useSelect } from '@/hooks/select';
 import PStatus from '@/data-display/status/PStatus.vue';
 import { ANIMATION_TYPE } from '@/foundation/icons/config';
 

@@ -1,6 +1,5 @@
 import { GridLayoutProps } from '@/others/deprecated/grid-layout/type';
 
-
 export interface ToolboxGridLayoutProps extends GridLayoutProps {
     paginationVisible: boolean;
     pageSizeVisible: boolean;

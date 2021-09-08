@@ -1,6 +1,5 @@
 import { INPUT_TYPE, JsonSchema, UiSchema } from '@/inputs/forms/json-schema-form/type';
 
-
 const getErrorUiSchemaByType = (key: string, value: JsonSchema, type: string): UiSchema => {
     const errorUiSchema = {
         component: 'div',

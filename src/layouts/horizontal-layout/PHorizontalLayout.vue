@@ -27,11 +27,11 @@
 </template>
 
 <script lang="ts">
-import PI from '@/foundation/icons/PI.vue';
 import {
     reactive, toRefs,
 } from '@vue/composition-api';
 import { throttle } from 'lodash';
+import PI from '@/foundation/icons/PI.vue';
 
 export default {
     name: 'PHorizontalLayout',

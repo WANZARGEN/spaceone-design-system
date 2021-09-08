@@ -4,7 +4,6 @@ import { object, boolean, withKnobs } from '@storybook/addon-knobs';
 import { VTooltip } from 'v-tooltip';
 import PProgressWizard from '@/navigation/wizards/progress-wizard/PProgressWizard.vue';
 
-
 export default {
     title: 'Navigation/Wizards/Progress Wizard',
     component: { PProgressWizard },
@@ -51,7 +50,6 @@ const getProps = () => ({
         default: boolean('disabled', false),
     },
 });
-
 
 export const progressWizard = () => ({
     components: { PProgressWizard },
@@ -173,7 +171,6 @@ export const helpSlot = () => ({
     },
 });
 
-
 export const stepAppendSlot = () => ({
     components: { PProgressWizard },
     props: { ...getProps() },
@@ -194,7 +191,6 @@ export const stepAppendSlot = () => ({
         };
     },
 });
-
 
 export const bottomSlot = () => ({
     components: { PProgressWizard },

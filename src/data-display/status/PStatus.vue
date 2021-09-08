@@ -33,8 +33,8 @@
 </template>
 
 <script lang="ts">
-import PI from '@/foundation/icons/PI.vue';
 import { computed } from '@vue/composition-api';
+import PI from '@/foundation/icons/PI.vue';
 import { StatusProps } from '@/data-display/status/type';
 import { getColor } from '@/util/helpers';
 import PLottie from '@/foundation/lottie/PLottie.vue';

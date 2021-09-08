@@ -128,7 +128,6 @@ export default {
             }
         };
 
-
         const checkStyles = () => {
             checkTabItemsOverflows();
             setPosition();

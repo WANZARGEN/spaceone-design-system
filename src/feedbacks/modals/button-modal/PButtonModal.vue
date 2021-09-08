@@ -69,17 +69,16 @@
 </template>
 
 <script lang="ts">
-import PButton from '@/inputs/buttons/button/PButton.vue';
-import { sizeMapping } from '@/feedbacks/modals/type';
 import {
     computed, onMounted, onUnmounted, reactive, toRefs,
 } from '@vue/composition-api';
+import PButton from '@/inputs/buttons/button/PButton.vue';
+import { sizeMapping } from '@/feedbacks/modals/type';
 import { makeProxy } from '@/util/composition-helpers';
 import { ButtonModalProps } from '@/feedbacks/modals/button-modal/type';
 import '../modal.pcss';
 import PIconButton from '@/inputs/buttons/icon-button/PIconButton.vue';
 import PLottie from '@/foundation/lottie/PLottie.vue';
-
 
 export default {
     name: 'PButtonModal',
@@ -104,7 +103,7 @@ export default {
         size: {
             type: String,
             default: 'md',
-            validator: value => Object.keys(sizeMapping).includes(value),
+            validator: (value) => Object.keys(sizeMapping).includes(value),
         },
         backdrop: {
             type: Boolean,

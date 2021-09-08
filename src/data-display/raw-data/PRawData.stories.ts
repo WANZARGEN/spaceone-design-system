@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import PRawData from '@/data-display/raw-data/PRawData.vue';
 import { boolean, withKnobs } from '@storybook/addon-knobs';
+import PRawData from '@/data-display/raw-data/PRawData.vue';
 
 export default {
     title: 'Data Display/Raw Data',
@@ -80,7 +80,6 @@ export const objectInput = () => ({
         };
     },
 });
-
 
 export const stringInput = () => ({
     components: { PRawData },
