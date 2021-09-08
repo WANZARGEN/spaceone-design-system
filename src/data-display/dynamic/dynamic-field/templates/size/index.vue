@@ -1,9 +1,8 @@
 <script lang="ts">
+import bytes from 'bytes';
 import PAnchor from '@/inputs/anchors/PAnchor.vue';
 import { SizeDynamicFieldProps } from '@/data-display/dynamic/dynamic-field/templates/size/type';
 import { SizeOptions } from '@/data-display/dynamic/dynamic-field/type/field-schema';
-import bytes from 'bytes';
-import { RenderContext } from 'vue/types/options';
 
 const unitMap: Record<string, bytes.Unit> = {
     BYTES: 'B',
@@ -40,7 +39,7 @@ export default {
             default: undefined,
         },
     },
-    render(h, { props, data }: RenderContext<SizeDynamicFieldProps>) {
+    render(h, { props, data }) {
         let value: number|null;
 
         if (typeof props.data === 'number') value = props.data;

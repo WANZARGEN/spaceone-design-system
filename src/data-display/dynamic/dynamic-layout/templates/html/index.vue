@@ -19,17 +19,16 @@ import {
     computed, getCurrentInstance, reactive, toRefs, watch,
 } from '@vue/composition-api';
 import { get } from 'lodash';
+import DOMPurify from 'dompurify';
 import { HtmlDynamicLayoutProps } from '@/data-display/dynamic/dynamic-layout/templates/html/type';
 import PPanelTop from '@/data-display/titles/panel-top/PPanelTop.vue';
-import DOMPurify from 'dompurify';
 import { iframeStyle } from './style';
 
-
-DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+DOMPurify.addHook('afterSanitizeAttributes', (node: Element) => {
     // set all elements owning target to target=_blank
     if ('target' in node) {
-        node.setAttribute('target', '_blank');
-        node.setAttribute('rel', 'noopener');
+        (node as Element).setAttribute('target', '_blank');
+        (node as Element).setAttribute('rel', 'noopener');
     }
 });
 export default {
@@ -68,9 +67,10 @@ export default {
                 if (typeof props.data !== 'string') return '';
                 return props.data;
             }),
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             iframeData: computed(() => DOMPurify.sanitize(state.rootData, { allowAttributes: { a: ['target'] } })),
         });
-
 
         const resizeIframe = (e) => {
             e.target.style.height = `${e.target.contentDocument.documentElement.scrollHeight}px`;

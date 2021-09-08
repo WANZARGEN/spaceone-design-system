@@ -1,8 +1,7 @@
 <script lang="ts">
 import { get } from 'lodash';
 import PDynamicField from '@/data-display/dynamic/dynamic-field/PDynamicField.vue';
-import { VNodeData } from 'vue';
-import { EnumItem, EnumOptions } from '@/data-display/dynamic/dynamic-field/type/field-schema';
+import { EnumItem } from '@/data-display/dynamic/dynamic-field/type/field-schema';
 import { EnumDynamicFieldProps } from '@/data-display/dynamic/dynamic-field/templates/enum/type';
 
 export default {
@@ -60,7 +59,7 @@ export default {
                 extraData: props.extraData,
             },
             on: listeners,
-        } as VNodeData);
+        });
     },
 };
 </script>

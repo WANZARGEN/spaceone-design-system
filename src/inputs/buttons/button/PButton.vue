@@ -2,7 +2,6 @@
 import { getBindClass } from '@/util/functional-helpers';
 import { Button } from '@/inputs/buttons/button/type';
 import PLottie from '@/foundation/lottie/PLottie.vue';
-import { VNode } from 'vue/types/vnode';
 
 const getClass = (attrs: Button) => {
     const cls = {
@@ -40,7 +39,7 @@ export default {
     }) {
         const tag = props.href ? 'a' : 'button';
 
-        const childrenEl: VNode[] = [...children];
+        const childrenEl = [...children];
         if (props.loading) {
             childrenEl.splice(0, 0, h(PLottie, {
                 class: 'spinner',
@@ -68,7 +67,7 @@ export default {
                     if (!props.disabled && !props.loading) {
                         if (listeners.click) {
                             if (typeof listeners.click === 'function') listeners.click(event);
-                            else listeners.click.forEach(func => func(event));
+                            else listeners.click.forEach((func) => func(event));
                         }
                     }
                 },

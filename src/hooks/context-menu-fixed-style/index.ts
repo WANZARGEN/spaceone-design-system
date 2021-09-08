@@ -3,7 +3,6 @@ import {
     computed, getCurrentInstance, onMounted, onUnmounted, reactive, watch,
 } from '@vue/composition-api';
 import { throttle } from 'lodash';
-import { Vue } from 'vue/types/vue';
 import { makeOptionalProxy } from '@/util/composition-helpers';
 
 export interface ContextMenuFixedStyleProps {
@@ -31,8 +30,8 @@ export const useContextMenuFixedStyle = (
     const vm = getCurrentInstance() as ComponentRenderProxy;
     const state = reactive({
         proxyVisibleMenu: makeOptionalProxy('visibleMenu', vm, false),
-        targetRef: null as Vue|Element|null,
-        targetElement: computed<Element|null>(() => (state.targetRef as Vue)?.$el ?? state.targetRef),
+        targetRef: null as Element|null,
+        targetElement: computed<Element|null>(() => (state.targetRef)?.$el ?? state.targetRef),
         contextMenuStyle: computed(() => {
             if (!state.proxyVisibleMenu || !state.targetRef) return {};
 
@@ -71,7 +70,6 @@ export const useContextMenuFixedStyle = (
         if (state.proxyVisibleMenu) state.proxyVisibleMenu = false;
     }, 300);
 
-
     if (props.useFixedMenuStyle) {
         let scrollParent: Element|undefined;
         watch(() => state.targetElement, (targetElement) => {
@@ -93,7 +91,6 @@ export const useContextMenuFixedStyle = (
             window.removeEventListener('resize', hideMenu);
         });
     }
-
 
     return {
         state,

@@ -34,7 +34,6 @@
 import {
     computed, defineComponent, onMounted, onUnmounted, reactive, toRefs, watch,
 } from '@vue/composition-api';
-import Vue from 'vue';
 
 import { copyAnyData, isNotEmpty } from '@/util/helpers';
 
@@ -69,7 +68,7 @@ export default defineComponent<Props>({
         const state = reactive({
             click: false,
             isAlertVisible: false,
-            iconRef: null as Vue|null,
+            iconRef: null as any|null,
             alertRef: null as Element|null,
             textRef: null as Element|null,
             alertStyle: computed<Partial<CSSStyleDeclaration>>(() => {
@@ -130,7 +129,7 @@ export default defineComponent<Props>({
             }
 
             const observer = new MutationObserver((mutation) => {
-                state.hasText = mutation.some(d => !!d.target.textContent?.trim());
+                state.hasText = mutation.some((d) => !!d.target.textContent?.trim());
             });
 
             observer.observe(textRef, {
@@ -144,11 +143,9 @@ export default defineComponent<Props>({
             state.hasText = !!textRef.textContent?.trim();
         }, { immediate: true });
 
-
         onUnmounted(() => {
             if (state.textObserver) state.textObserver.disconnect();
         });
-
 
         return {
             ...toRefs(state),
