@@ -117,7 +117,7 @@
     "babel-jest": "^23.6.0",
     "babel-preset-vue": "^2.0.2",
     "commitizen": "^4.2.4",
-    "copy-webpack-plugin": "^4.6.0",
+    "copy-webpack-plugin": "^5.0.0",
     "css-loader": "^3.2.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^6.7.2",
