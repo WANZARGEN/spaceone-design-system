@@ -1,32 +1,30 @@
 <template>
-    <fragment>
-        <p-text-list v-if="type !== 'list' && Array.isArray(data)"
-                     :items="data"
-                     :delimiter="options.delimiter"
-        >
-            <template #default="{value}">
-                <p-dynamic-field :options="options"
-                                 :data="value"
-                                 :type-options="typeOptions"
-                                 :extra-data="extraData"
-                                 :handler="handler"
-                                 v-on="$listeners"
-                />
-            </template>
-            <template v-if="!options.delimiter" #delimiter>
-                <br/>
-            </template>
-        </p-text-list>
-        <component :is="component"
-                   v-else
-                   :options="proxy.options"
-                   :data="proxy.data"
-                   :type-options="proxy.typeOptions"
-                   :extra-data="proxy.extraData"
-                   :handler="nextHandler"
-                   v-on="$listeners"
-        />
-    </fragment>
+    <p-text-list v-if="type !== 'list' && Array.isArray(data)"
+                 :items="data"
+                 :delimiter="options.delimiter"
+    >
+        <template #default="{value}">
+            <p-dynamic-field :options="options"
+                             :data="value"
+                             :type-options="typeOptions"
+                             :extra-data="extraData"
+                             :handler="handler"
+                             v-on="$listeners"
+            />
+        </template>
+        <template v-if="!options.delimiter" #delimiter>
+            <br>
+        </template>
+    </p-text-list>
+    <component :is="component"
+               v-else
+               :options="proxy.options"
+               :data="proxy.data"
+               :type-options="proxy.typeOptions"
+               :extra-data="proxy.extraData"
+               :handler="nextHandler"
+               v-on="$listeners"
+    />
 </template>
 
 <script lang="ts">
@@ -36,7 +34,6 @@ import {
 import { DynamicFieldProps } from '@/data-display/dynamic/dynamic-field/type';
 import { dynamicFieldTypes } from '@/data-display/dynamic/dynamic-field/type/field-schema';
 import PTextList from '@/others/console/text-list/PTextList.vue';
-
 
 interface State {
     component: any;
@@ -80,7 +77,6 @@ export default {
             component: null,
             nextHandler: props.handler,
         });
-
 
         const loadComponent = async (fieldProps: DynamicFieldProps) => {
             try {
@@ -129,7 +125,6 @@ export default {
             }
             return res;
         });
-
 
         onMounted(async () => {
             await loadComponent(props);

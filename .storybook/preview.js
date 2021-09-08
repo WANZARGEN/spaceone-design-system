@@ -10,7 +10,6 @@ import VueRouter from 'vue-router';
 import VueI18n from 'vue-i18n';
 import velocity from 'velocity-animate';
 import SvgIcon from 'vue-svgicon';
-import Fragment from "vue-fragment";
 
 import webFontLoader from 'webfontloader';
 import { fontUrls, webFonts } from '@/styles/web-fonts';
@@ -29,7 +28,6 @@ Vue.use(SvgIcon, {
     tagName: 'svgicon',
     classPrefix: 'p-i'
 })
-Vue.use(Fragment.Plugin);
 Vue.use(VTooltip, { defaultClass: 'p-tooltip', defaultBoundariesElement: document.body });
 
 Vue.prototype.toJSON = function () {

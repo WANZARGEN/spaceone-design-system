@@ -113,7 +113,6 @@ module.exports = {
             'vue-svgicon',
             'velocity-animate',
             'vue-notification',
-            'vue-fragment',
             'v-tooltip',
         ]);
     },
