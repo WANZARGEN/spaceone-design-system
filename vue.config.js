@@ -45,7 +45,10 @@ module.exports = {
         loaderOptions: {
             postcss: postcssConfig,
             sass: {
-                includePaths: ['./node_modules'],
+                sassOptions: {
+                    includePaths: ['./node_modules'],
+                },
+                indentedSyntax: true,
             },
         },
         extract: false,

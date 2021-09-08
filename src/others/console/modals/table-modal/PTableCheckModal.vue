@@ -112,7 +112,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="postcss" scoped>
 .p-table-check-modal-sub-title {
     font-style: normal;
     font-weight: normal;
