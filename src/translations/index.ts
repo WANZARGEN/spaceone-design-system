@@ -1,12 +1,12 @@
 import VueI18n, { LocaleMessageObject } from 'vue-i18n';
 
-
+import Vue, { createApp } from 'vue';
 import ko from '@/translations/language-pack/ko.json';
 import en from '@/translations/language-pack/en.json';
 import ja from '@/translations/language-pack/ja.json';
-import Vue from 'vue';
 
-Vue.use(VueI18n);
+const app = createApp({});
+app.use(VueI18n);
 
 // simple recursive remove keys with empty value
 const removeEmpty = (obj: object | any): LocaleMessageObject => Object.keys(obj)
