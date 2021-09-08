@@ -1,10 +1,8 @@
-import { PluginObject, VueConstructor, createApp } from 'vue';
 import VueI18n from 'vue-i18n';
 import velocity from 'velocity-animate';
 import SvgIcon from 'vue-svgicon';
 import VueCompositionApi from '@vue/composition-api';
-import Notifications, { NotificationOptions } from 'vue-notification';
-import Fragment from 'vue-fragment';
+import Notifications from 'vue-notification';
 import VTooltip from 'v-tooltip';
 import VueRouter from 'vue-router';
 
@@ -15,33 +13,19 @@ interface SpaceoneDSOptions {
     installFragment?: boolean;
 }
 
-const app = createApp({});
-
-const SpaceoneDS: PluginObject<SpaceoneDSOptions> = {
-    install(_Vue: VueConstructor, options) {
-        if (options?.installVueRouter) _Vue.use(VueRouter);
-        if (options?.installVueI18n) _Vue.use(VueI18n);
-        if (options?.installVueCompositionApi) _Vue.use(VueCompositionApi);
-        if (options?.installFragment) _Vue.use(Fragment.Plugin);
-        _Vue.use(Notifications, { velocity });
-        _Vue.use(SvgIcon, {
+export default {
+    install(app, options: SpaceoneDSOptions) {
+        if (options?.installVueRouter) app.use(VueRouter);
+        if (options?.installVueI18n) app.use(VueI18n);
+        if (options?.installVueCompositionApi) app.use(VueCompositionApi);
+        app.use(Notifications, { velocity });
+        app.use(SvgIcon, {
             tagName: 'svgicon',
             classPrefix: 'p-i',
         });
-        _Vue.use(VTooltip, { defaultClass: 'p-tooltip', defaultBoundariesElement: document.body });
+        app.use(VTooltip, { defaultClass: 'p-tooltip', defaultBoundariesElement: document.body });
     },
 };
-
-declare module 'vue/types/vue' {
-    interface Vue {
-        $notify: (options: NotificationOptions | string) => void;
-    }
-    interface VueConstructor {
-        notify: (options: NotificationOptions | string) => void;
-    }
-}
-
-export default SpaceoneDS;
 
 /* Languages */
 export { messages } from './translations';
