@@ -7,13 +7,24 @@ const postCssLoader = {
 };
 
 module.exports = {
+  core: {
+    builder: 'webpack4',
+  },
   "stories": [
-    "../src/**/*.stories.mdx",
-    "../src/**/*.stories.@(js|jsx|ts|tsx)"
+    "../src/**/PBadge.stories.mdx",
   ],
   "addons": [
-    "@storybook/addon-links",
+    '@storybook/addon-links',
     "@storybook/addon-essentials",
+    // '@storybook/addon-actions',
+    // '@storybook/addon-storysource',
+    // '@storybook/addon-a11y',
+    // '@storybook/addon-docs',
+    // '@storybook/addon-viewport',
+    // '@storybook/addon-google-analytics',
+    // '@storybook/addon-controls',
+    // 'storybook-addon-designs/register',
+
     {
       name: "@storybook/addon-postcss",
       options: {
@@ -28,7 +39,7 @@ module.exports = {
     /* alis settings */
     config.resolve.alias = {
       '@': path.resolve(__dirname, '../src'),
-      'fs': path.resolve(__dirname, 'fsMock.js'),
+      'fs': path.resolve(__dirname, 'fsMock.js'), // this is for ejs in PMarkdown.vue
     };
 
 
