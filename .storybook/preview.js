@@ -1,12 +1,14 @@
 import "@/styles/style.pcss";
 
+import { app } from '@storybook/vue3';
+
 import '@storybook/addon-console';
 import { withDesign } from 'storybook-addon-designs';
 import VueCompositionApi from '@vue/composition-api';
 import Notifications from 'vue-notification';
 
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+// import Vue from 'vue';
+// import VueRouter from 'vue-router';
 import VueI18n from 'vue-i18n';
 import velocity from 'velocity-animate';
 import SvgIcon from 'vue-svgicon';
@@ -20,17 +22,17 @@ import VTooltip from 'v-tooltip';
 import SpaceOneTheme from './SpaceOneTheme';
 import {i18n} from '@/translations'
 
-Vue.use(VueRouter)
-Vue.use(VueI18n);
-Vue.use(VueCompositionApi);
-Vue.use(Notifications, { velocity });
-Vue.use(SvgIcon, {
+app.use(VueRouter)
+app.use(VueI18n);
+app.use(VueCompositionApi);
+app.use(Notifications, { velocity });
+app.use(SvgIcon, {
     tagName: 'svgicon',
     classPrefix: 'p-i'
 })
-Vue.use(VTooltip, { defaultClass: 'p-tooltip', defaultBoundariesElement: document.body });
+app.use(VTooltip, { defaultClass: 'p-tooltip', defaultBoundariesElement: document.body });
 
-Vue.prototype.toJSON = function () {
+app.config.globalProperties.toJSON = function () {
     return this;
 };
 
