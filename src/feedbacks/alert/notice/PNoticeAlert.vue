@@ -1,38 +1,39 @@
 <template>
-    <notifications :group="group"
-                   :position="position"
-                   width="326px"
-                   close-on-click
-    >
-        <template #body="{item, close}">
-            <div class="p-notice-alert" :class="item.type"
-                 @click="close"
-            >
-                <p-i v-if="item.type === 'success'" name="ic_state_active"
-                     class="item-type-icon"
-                     width="1.5rem"
-                     height="1.5rem"
-                />
-                <p-i v-if="item.type === 'warning'" name="ic_list_duplication"
-                     class="item-type-icon"
-                     width="1.5rem"
-                     height="1.5rem"
-                />
-                <p-i v-if="item.type === 'alert'" name="ic_alert"
-                     class="item-type-icon"
-                     width="1.5rem"
-                     height="1.5rem"
-                />
-                <a class="title">{{ item.title }}</a>
-                <div class="contents">
-                    {{ item.text }}
-                </div>
-            </div>
-        </template>
-    </notifications>
+    <div />
+<!--    <notifications :group="group"-->
+<!--                   :position="position"-->
+<!--                   width="326px"-->
+<!--                   close-on-click-->
+<!--    >-->
+<!--        <template #body="{item, close}">-->
+<!--            <div class="p-notice-alert" :class="item.type"-->
+<!--                 @click="close"-->
+<!--            >-->
+<!--                <p-i v-if="item.type === 'success'" name="ic_state_active"-->
+<!--                     class="item-type-icon"-->
+<!--                     width="1.5rem"-->
+<!--                     height="1.5rem"-->
+<!--                />-->
+<!--                <p-i v-if="item.type === 'warning'" name="ic_list_duplication"-->
+<!--                     class="item-type-icon"-->
+<!--                     width="1.5rem"-->
+<!--                     height="1.5rem"-->
+<!--                />-->
+<!--                <p-i v-if="item.type === 'alert'" name="ic_alert"-->
+<!--                     class="item-type-icon"-->
+<!--                     width="1.5rem"-->
+<!--                     height="1.5rem"-->
+<!--                />-->
+<!--                <a class="title">{{ item.title }}</a>-->
+<!--                <div class="contents">-->
+<!--                    {{ item.text }}-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </template>-->
+<!--    </notifications>-->
 </template>
 <script lang="ts">
-import PI from '@/foundation/icons/PI.vue';
+// import PI from '@/foundation/icons/PI.vue';
 
 /**
  * Used library: vue-notification
@@ -42,7 +43,7 @@ import PI from '@/foundation/icons/PI.vue';
 export default {
     name: 'PNoticeAlert',
     components: {
-        PI,
+        // PI,
     },
     props: {
         group: {

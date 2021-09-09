@@ -2,7 +2,7 @@ import VueI18n from 'vue-i18n';
 import velocity from 'velocity-animate';
 import SvgIcon from 'vue-svgicon';
 import VueCompositionApi from '@vue/composition-api';
-import Notifications from 'vue-notification';
+// import Notifications from 'vue-notification';
 import VTooltip from 'v-tooltip';
 import VueRouter from 'vue-router';
 
@@ -18,7 +18,7 @@ export default {
         if (options?.installVueRouter) app.use(VueRouter);
         if (options?.installVueI18n) app.use(VueI18n);
         if (options?.installVueCompositionApi) app.use(VueCompositionApi);
-        app.use(Notifications, { velocity });
+        // app.use(Notifications, { velocity });
         app.use(SvgIcon, {
             tagName: 'svgicon',
             classPrefix: 'p-i',

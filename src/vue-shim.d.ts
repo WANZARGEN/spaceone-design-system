@@ -3,14 +3,14 @@ declare module '*.vue' {
     import VueRouter from 'vue-router';
     import VueI18n from 'vue-i18n';
     import VueCompositionApi from '@vue/composition-api';
-    import Notifications from 'vue-notification';
+    // import Notifications from 'vue-notification';
     import SvgIcon from 'vue-svgicon';
     import { VTooltip } from 'v-tooltip';
 
     Vue.use(VueRouter);
     Vue.use(VueI18n);
     Vue.use(VueCompositionApi);
-    Vue.use(Notifications);
+    // Vue.use(Notifications);
     Vue.use(SvgIcon);
     Vue.use(VTooltip);
 

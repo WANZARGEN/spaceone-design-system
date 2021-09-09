@@ -5,7 +5,7 @@ import { app } from '@storybook/vue3';
 import '@storybook/addon-console';
 import { withDesign } from 'storybook-addon-designs';
 import VueCompositionApi from '@vue/composition-api';
-import Notifications from 'vue-notification';
+// import Notifications from 'vue-notification';
 
 // import Vue from 'vue';
 // import VueRouter from 'vue-router';
@@ -25,7 +25,7 @@ import {i18n} from '@/translations'
 app.use(VueRouter)
 app.use(VueI18n);
 app.use(VueCompositionApi);
-app.use(Notifications, { velocity });
+// app.use(Notifications, { velocity });
 app.use(SvgIcon, {
     tagName: 'svgicon',
     classPrefix: 'p-i'

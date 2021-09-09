@@ -1,52 +1,53 @@
 <template>
-    <notifications
-        class="p-toast-alert"
-        :group="group"
-        :position="position"
-        width="320"
-        :close-on-click="false"
-    >
-        <template #body="{item, close}">
-            <div class="alert-contents" :class="item.type"
-                 @click="close"
-            >
-                <div class="icon-wrapper">
-                    <p-i v-if="item.type === 'success'" name="ic_state_active"
-                         class="item-type-icon"
-                         width="1.5rem"
-                         height="1.5rem"
-                    />
-                    <p-i v-if="item.type === 'warning'" name="ic_list_duplication"
-                         class="item-type-icon"
-                         width="1.5rem"
-                         height="1.5rem"
-                    />
-                    <p-i v-if="item.type === 'alert'" name="ic_alert"
-                         class="item-type-icon"
-                         width="1.5rem"
-                         height="1.5rem"
-                    />
-                    <p-lottie v-if="item.type === 'loading'" name="thin-spinner"
-                              class="item-type-icon"
-                              :size="1.5"
-                    />
-                </div>
-                <div class="content-wrapper" :class="[item.type === 'info' ? 'ml-2' : '']">
-                    <a class="title">{{ item.title }}</a>
-                    <div v-if="item.text" class="contents">
-                        {{ item.text }}
-                    </div>
-                </div>
-                <div v-if="isClosedWithButton" class="button-wrapper">
-                    <p-i name="ic_delete"
-                         class="delete-icon"
-                         width="1.5rem" height="1.5rem"
-                         color="inherit"
-                    />
-                </div>
-            </div>
-        </template>
-    </notifications>
+    <div />
+<!--    <notifications-->
+<!--        class="p-toast-alert"-->
+<!--        :group="group"-->
+<!--        :position="position"-->
+<!--        width="320"-->
+<!--        :close-on-click="false"-->
+<!--    >-->
+<!--        <template #body="{item, close}">-->
+<!--            <div class="alert-contents" :class="item.type"-->
+<!--                 @click="close"-->
+<!--            >-->
+<!--                <div class="icon-wrapper">-->
+<!--                    <p-i v-if="item.type === 'success'" name="ic_state_active"-->
+<!--                         class="item-type-icon"-->
+<!--                         width="1.5rem"-->
+<!--                         height="1.5rem"-->
+<!--                    />-->
+<!--                    <p-i v-if="item.type === 'warning'" name="ic_list_duplication"-->
+<!--                         class="item-type-icon"-->
+<!--                         width="1.5rem"-->
+<!--                         height="1.5rem"-->
+<!--                    />-->
+<!--                    <p-i v-if="item.type === 'alert'" name="ic_alert"-->
+<!--                         class="item-type-icon"-->
+<!--                         width="1.5rem"-->
+<!--                         height="1.5rem"-->
+<!--                    />-->
+<!--                    <p-lottie v-if="item.type === 'loading'" name="thin-spinner"-->
+<!--                              class="item-type-icon"-->
+<!--                              :size="1.5"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="content-wrapper" :class="[item.type === 'info' ? 'ml-2' : '']">-->
+<!--                    <a class="title">{{ item.title }}</a>-->
+<!--                    <div v-if="item.text" class="contents">-->
+<!--                        {{ item.text }}-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div v-if="isClosedWithButton" class="button-wrapper">-->
+<!--                    <p-i name="ic_delete"-->
+<!--                         class="delete-icon"-->
+<!--                         width="1.5rem" height="1.5rem"-->
+<!--                         color="inherit"-->
+<!--                    />-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </template>-->
+<!--    </notifications>-->
 </template>
 
 <script lang="ts">
@@ -61,8 +62,8 @@ import PLottie from '@/foundation/lottie/PLottie.vue';
 export default {
     name: 'PToastAlert',
     components: {
-        PI,
-        PLottie,
+        // PI,
+        // PLottie,
     },
     props: {
         group: {

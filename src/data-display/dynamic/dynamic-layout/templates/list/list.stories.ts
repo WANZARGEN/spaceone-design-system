@@ -6,7 +6,7 @@ import { action } from '@storybook/addon-actions';
 import {
     text, object,
 } from '@storybook/addon-knobs';
-import PDynamicLayout from '@/organisms/dynamic-layout/PDynamicLayout.vue';
+import PDynamicLayout from '@/data-display/dynamic/dynamic-layout/PDynamicLayout.vue';
 
 export default {
     title: 'others/Dynamic/DynamicLayout/list',
