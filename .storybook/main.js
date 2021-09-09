@@ -20,23 +20,38 @@ module.exports = {
         '@storybook/addon-viewport',
         '@storybook/addon-google-analytics',
         '@storybook/addon-controls',
-        'storybook-addon-designs/register'
+        'storybook-addon-designs/register',
+        "@storybook/addon-essentials",
+        {
+            name: "@storybook/addon-postcss",
+            options: {
+                postcssLoaderOptions: {
+                    implementation: require("postcss"),
+                },
+            },
+        },
     ],
     webpackFinal:  async (config) => {
 
         /* alis settings */
         config.resolve.alias = {
-            'vue': 'vue/dist/vue.common.js',
+            vue: path.resolve('/node_modules/vue/dist/vue.runtime.global.js'),
             '@': path.resolve(__dirname, '../src'),
             'fs': path.resolve(__dirname, 'fsMock.js'),
         };
 
+
         /* SASS settings */
         config.module.rules.push({
             test: /\.s?css$/,
-            use: ['style-loader', 'css-loader',
+            use: ['style-loader', 'css-loader', 'postcss-loader',
                 {
                   loader: 'sass-loader',
+                    options: {
+                        sassOptions: {
+                            indentedSyntax: true
+                        }
+                    }
                 },
             ],
             include: path.resolve(__dirname, '../'),
