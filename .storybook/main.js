@@ -13,7 +13,7 @@ module.exports = {
     addons: [
         '@storybook/addon-actions',
         '@storybook/addon-links',
-        '@storybook/addon-knobs/register',
+        // '@storybook/addon-knobs/register',
         '@storybook/addon-storysource',
         '@storybook/addon-a11y',
         '@storybook/addon-docs',
@@ -35,7 +35,7 @@ module.exports = {
 
         /* alis settings */
         config.resolve.alias = {
-            vue: path.resolve('/node_modules/vue/dist/vue.runtime.global.js'),
+            'vue': path.resolve('/node_modules/vue/dist/vue.runtime.global.js'),
             '@': path.resolve(__dirname, '../src'),
             'fs': path.resolve(__dirname, 'fsMock.js'),
         };
