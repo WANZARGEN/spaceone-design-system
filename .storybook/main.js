@@ -1,5 +1,5 @@
 const path = require('path');
-const forkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+// const forkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const postCssLoader = {
   loader: 'postcss-loader',
@@ -47,15 +47,15 @@ module.exports = {
       ],
       include: path.resolve(__dirname, '../'),
     });
-
+    //
     /* POSTCSS settings */
     config.module.rules.push({
       test: /\.(postcss|pcss)$/,
       use: ['style-loader', 'css-loader', postCssLoader],
       include: path.resolve(__dirname, '../'),
     });
-
-    config.plugins.push(new forkTsCheckerWebpackPlugin());
+    //
+    // config.plugins.push(new forkTsCheckerWebpackPlugin());
 
     return config;
   },
