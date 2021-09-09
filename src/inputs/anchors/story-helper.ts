@@ -1,5 +1,5 @@
 import { ArgTypes } from '@storybook/addons';
-import VueRouter from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 
 export const argTypes: ArgTypes = {
     text: {
@@ -172,9 +172,8 @@ export const argTypes: ArgTypes = {
     },
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-export const router = new VueRouter({
+export const router = createRouter({
+    history: createWebHistory(),
     routes: [
         {
             path: '/',
