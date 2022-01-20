@@ -290,15 +290,24 @@ export default defineComponent<Props>({
                 return false;
             }
 
-            emit('update-drag', e.dragNode, parent);
             emit('end-drag', e.dragNode, parent);
             return true;
         };
 
-        const handleDrop = (e, targetPath) => {
+        const handleDrop = (tree, e: Store, targetPath, _rollback) => {
+            const rollback = () => {
+                _rollback();
+
+                if (getSelectState(targetPath ?? [])) {
+                    setSelectItem(e.dragNode as TreeNode, e.startPath);
+                }
+            };
+
             if (getSelectState(e.startPath ?? [])) {
                 setSelectItem(e.dragNode as TreeNode, targetPath);
             }
+
+            emit('drop', e.dragNode, tree.getNodeParentByPath(targetPath), rollback);
         };
 
         const eachDraggable = (path: number[], tree: HeTree, e: Store) => {

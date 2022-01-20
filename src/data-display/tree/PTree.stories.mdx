@@ -48,7 +48,7 @@ export const ExpertTemplate = (args, { argTypes }) => ({
                     @init="onInit"
                     @change-select="onChangeSelect"
                     @start-drag="onStartDrag"
-                    @update-drag="onUpdateDrag"
+                    @drop="onDrop"
                     @end-drag="onEndDrag"
                     @finish-edit="onFinishEdit"
             >
@@ -219,8 +219,12 @@ export const ExpertTemplate = (args, { argTypes }) => ({
             state.dragNode = node
             state.dragParentNode = parent
         }
-        const onUpdateDrag = (node, parent, rollback) => {
-            console.debug('update drag', node, parent, rollback)
+        const onDrop = (node, parent, rollback) => {
+            console.debug('drop', node, parent, rollback)
+            if (Math.random() > 0.5) {
+                alert('Drop Failed! Rollback.');
+                rollback();
+            }
         }
         const onEndDrag = (node, parent) => {
             console.debug('end drag', node, parent)
@@ -258,7 +262,7 @@ export const ExpertTemplate = (args, { argTypes }) => ({
             updateData,
             onChangeSelect,
             onStartDrag,
-            onUpdateDrag,
+            onDrop,
             onEndDrag,
             onFinishEdit,
             changeSelectState
@@ -460,7 +464,7 @@ interface DataFetcher<T=any> {
 |change-select| Emitted when selection items changed. Pass selected items. `TreeItem<T>[]` |
 |start-drag| Emitted when dragging start. Pass dragging node and parent node. |
 |end-drag| Emitted when finished dragging. Pass dragging node and parent of target node. |
-|update-drag| Emitted when finished dragging and all validations are passed. Pass dragging node and parent of target node. |
+|drop| Emitted when finished dragging and finally dropped. Pass dropped node, parent, and rollback function. |
 |finish-edit| Emitted when finished inline editing. Pass the node and the input text. |
 
 ```typescript
