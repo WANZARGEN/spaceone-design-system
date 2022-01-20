@@ -213,10 +213,36 @@ export default {
                     }
                     const targetIndex = hp.arrayLast(targetPath);
                     targetSiblings.splice(targetIndex, 0, dragNode);
+
+                    const rollback = () => {
+                        // remove inserted node from target position
+                        const targetParentPath = hp.arrayWithoutEnd(targetPath, 1);
+                        const targetParent = targetTree.getNodeByPath(targetParentPath);
+                        const targetSiblings = targetParentPath.length === 0 ? targetTree.treeData : targetParent.children;
+                        const targetIndex = hp.arrayLast(targetPath);
+                        targetSiblings.splice(targetIndex, 1);
+
+                        // add node to start position
+                        const startParentPath = hp.arrayWithoutEnd(startPath, 1);
+                        const startParent = startTree.getNodeByPath(startParentPath);
+                        // const startSiblings = startParentPath.length === 0 ? startTree.treeData : startParent.children;
+                        let startSiblings;
+                        if (startParentPath.length === 0) {
+                            startSiblings = startTree.treeData;
+                        } else {
+                            if (!startParent.children) {
+                                this.$set(startParent, 'children', []);
+                            }
+                            startSiblings = startParent.children;
+                        }
+                        const startIndex = hp.arrayLast(startPath);
+                        startSiblings.splice(startIndex, 0, dragNode);
+                    }
+
                     // emit event
                     startTree.$emit('input', startTree.treeData);
                     startTree.$emit('change', store);
-                    targetTree.$emit('drop', store, targetPath);
+                    targetTree.$emit('drop', targetTree, store, targetPath, rollback);
                     this.$root.$emit('he-tree-drop', store);
                     if (targetTree !== startTree) {
                         targetTree.$emit('input', targetTree.treeData);
